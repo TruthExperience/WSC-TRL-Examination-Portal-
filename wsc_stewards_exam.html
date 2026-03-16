@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WSC Stewards Certification Exam</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;700&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-dark: #9B7A2A;
+    --gold-glow: rgba(201,168,76,0.18);
+    --black: #060608;
+    --surface: #0E0E12;
+    --border: #2A2A35;
+    --text: #E8E8F0;
+    --muted: #6B6B80;
+    --green: #00C853;
+    --red: #CC0000;
+    --amber: #FFB300;
+    --light-gray: #1A1A22;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left { display: flex; align-items: center; gap: 14px; }
+
+  .wsc-badge {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: #080808;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 2px;
+    padding: 6px 14px;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    font-weight: 900;
+  }
+
+  .header-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .timer-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-shadow: 0 0 16px var(--gold-glow);
+    transition: color 0.5s;
+  }
+
+  .timer-display.warning { color: var(--amber); }
+  .timer-display.critical { color: var(--red); animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+  .prog-wrap { height: 2px; background: var(--border); }
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+    transition: width 0.5s ease;
+    box-shadow: 0 0 6px var(--gold-glow);
+  }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 36px 20px 80px; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ---- INTRO ---- */
+  .intro-wrap { text-align: center; padding: 52px 16px 36px; }
+
+  .intro-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .intro-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 88px);
+    letter-spacing: 5px;
+    line-height: 0.88;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .intro-title span { color: var(--gold); }
+
+  .intro-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 44px;
+  }
+
+  .spec-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .spec-cell { background: var(--surface); padding: 22px 16px; text-align: center; }
+
+  .spec-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 44px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .spec-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .pillar-cell {
+    background: var(--surface);
+    padding: 16px 14px;
+    text-align: center;
+    border-top: 2px solid transparent;
+  }
+
+  .pillar-cell:nth-child(1) { border-top-color: var(--gold); }
+  .pillar-cell:nth-child(2) { border-top-color: #4FC3F7; }
+  .pillar-cell:nth-child(3) { border-top-color: #81C784; }
+
+  .pillar-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .pillar-cell:nth-child(1) .pillar-title { color: var(--gold); }
+  .pillar-cell:nth-child(2) .pillar-title { color: #4FC3F7; }
+  .pillar-cell:nth-child(3) .pillar-title { color: #81C784; }
+
+  .pillar-desc {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    line-height: 1.5;
+  }
+
+  .mandate-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    line-height: 1.9;
+    color: var(--muted);
+    text-align: left;
+  }
+
+  .mandate-box strong { color: var(--text); }
+
+  .btn-start {
+    display: block; width: 100%;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: #080808;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 5px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .btn-start:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .btn-start:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; filter: none; }
+
+  /* ---- LOADING ---- */
+  .load-wrap { text-align: center; padding: 110px 20px; }
+
+  .load-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .load-bar-outer { width: 280px; height: 2px; background: var(--border); margin: 0 auto 28px; overflow: hidden; }
+  .load-bar-inner { height: 100%; background: var(--gold); animation: sweep 1.8s ease-in-out infinite; box-shadow: 0 0 8px var(--gold-glow); }
+  @keyframes sweep { 0%{width:0;margin-left:0} 50%{width:100%;margin-left:0} 100%{width:0;margin-left:100%} }
+
+  .load-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    min-height: 20px;
+  }
+
+  /* ---- EXAM ---- */
+  .exam-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .q-counter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .q-counter strong { color: var(--text); font-size: 15px; }
+
+  .q-dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 380px; justify-content: flex-end; }
+
+  .q-dot { width: 8px; height: 8px; background: var(--border); transition: background 0.2s; }
+  .q-dot.done { background: var(--gold); }
+  .q-dot.active { background: var(--text); }
+
+  .tag-pill {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .tag-wsc { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .tag-f2 { background: rgba(79,195,247,0.1); color: #4FC3F7; border: 1px solid rgba(79,195,247,0.3); }
+  .tag-f1 { background: rgba(129,199,132,0.1); color: #81C784; border: 1px solid rgba(129,199,132,0.3); }
+
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .q-text { font-size: 15px; line-height: 1.65; color: var(--text); }
+
+  .options { display: flex; flex-direction: column; gap: 9px; margin-bottom: 26px; }
+
+  .opt {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.5;
+    transition: all 0.13s;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .opt:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-glow); }
+  .opt.selected { border-color: var(--gold); background: var(--gold-glow); }
+  .opt:disabled { cursor: default; }
+
+  .opt-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    min-width: 18px;
+    margin-top: 2px;
+    transition: color 0.13s;
+  }
+
+  .opt.selected .opt-letter { color: var(--gold); }
+
+  .nav-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+
+  .btn-nav {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 11px 22px;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-transform: uppercase;
+  }
+
+  .btn-nav:hover:not(:disabled) { border-color: var(--text); color: var(--text); }
+  .btn-nav:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border: none;
+    color: #080808;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 3px;
+    padding: 11px 28px;
+    cursor: pointer;
+    transition: all 0.18s;
+    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+  }
+
+  .btn-submit:hover { filter: brightness(1.1); }
+  .btn-submit:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; filter: none; }
+
+  /* ---- RESULTS ---- */
+  .result-hero { text-align: center; padding: 44px 16px 36px; }
+
+  .result-verdict {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    letter-spacing: 8px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .result-verdict.pass { color: var(--green); text-shadow: 0 0 40px rgba(0,200,83,0.25); }
+  .result-verdict.fail { color: var(--red); text-shadow: 0 0 40px rgba(204,0,0,0.25); }
+
+  .result-pct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 46px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .result-pct.pass { color: var(--green); }
+  .result-pct.fail { color: var(--red); }
+
+  .result-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .stat-cell { background: var(--surface); padding: 18px; text-align: center; }
+
+  .stat-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .stat-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .btn-retake {
+    display: block; width: 100%;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: #080808;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 4px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+
+  .btn-retake:hover { filter: brightness(1.1); }
+
+  .review-section { margin-top: 40px; }
+
+  .review-hdr {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .rv-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    padding: 18px 22px;
+    margin-bottom: 10px;
+  }
+
+  .rv-item.correct { border-left-color: var(--green); }
+  .rv-item.incorrect { border-left-color: var(--red); }
+  .rv-item.skipped { border-left-color: var(--amber); }
+
+  .rv-q { font-size: 13px; line-height: 1.55; color: var(--text); margin-bottom: 9px; }
+
+  .rv-tags { display: flex; gap: 7px; flex-wrap: wrap; font-family: 'IBM Plex Mono', monospace; font-size: 10px; margin-bottom: 8px; }
+
+  .tag { padding: 3px 9px; }
+  .tag-ok { background: rgba(0,200,83,0.12); color: var(--green); border: 1px solid rgba(0,200,83,0.25); }
+  .tag-bad { background: rgba(204,0,0,0.12); color: #ff6b6b; border: 1px solid rgba(204,0,0,0.25); }
+  .tag-skip { background: rgba(255,179,0,0.1); color: var(--amber); border: 1px solid rgba(255,179,0,0.25); }
+
+  .rv-exp {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding-top: 9px;
+    border-top: 1px solid var(--border);
+  }
+
+  .err-box {
+    background: var(--surface);
+    border: 1px solid var(--red);
+    padding: 24px;
+    text-align: center;
+    margin: 32px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .err-box strong { color: var(--red); display: block; margin-bottom: 8px; font-size: 15px; }
+
+  .btn-retry {
+    margin-top: 14px;
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 9px 22px;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-transform: uppercase;
+  }
+
+  .btn-retry:hover { background: rgba(204,0,0,0.1); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="wsc-badge">WSC</div>
+    <div class="header-title">Stewards Certification Exam</div>
+  </div>
+  <div class="timer-display" id="timerDisplay">35:00</div>
+</div>
+<div class="prog-wrap">
+  <div class="prog-fill" id="progFill" style="width:0%"></div>
+</div>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="screen active" id="screenIntro">
+    <div class="intro-wrap">
+      <div class="intro-eyebrow">World Series Championship</div>
+      <div class="intro-title">STEWARDS<br><span>CERTIFICATION</span></div>
+      <div class="intro-sub">Official Examination — Three-Pillar Assessment</div>
+
+      <div class="spec-row">
+        <div class="spec-cell">
+          <div class="spec-val">30</div>
+          <div class="spec-label">Questions</div>
+        </div>
+        <div class="spec-cell">
+          <div class="spec-val">35</div>
+          <div class="spec-label">Minutes</div>
+        </div>
+        <div class="spec-cell">
+          <div class="spec-val">90%</div>
+          <div class="spec-label">Pass Threshold</div>
+        </div>
+      </div>
+
+      <div class="pillar-grid">
+        <div class="pillar-cell">
+          <div class="pillar-title">WSC Regulations</div>
+          <div class="pillar-desc">Unified Code v1.2<br>Stewards Manual v1.2<br>PP Calculator<br>Evidence Standards</div>
+        </div>
+        <div class="pillar-cell">
+          <div class="pillar-title">FIA F2 Regs</div>
+          <div class="pillar-desc">2025 Sporting Regs<br>Race Procedures<br>Safety Car / VSC<br>Penalties & Appeals</div>
+        </div>
+        <div class="pillar-cell">
+          <div class="pillar-title">FIA F1 Regs</div>
+          <div class="pillar-desc">ISC Principles<br>Driving Standards<br>Steward Procedures<br>Flag & Signal Rules</div>
+        </div>
+      </div>
+
+      <div class="mandate-box">
+        <strong>EXAMINATION MANDATE</strong><br>
+        No hints. No partial credit. Questions are generated fresh each attempt.<br>
+        You must score <strong>27 of 30 or above (90%)</strong> to earn WSC Steward certification.<br>
+        A score of 89% or below is a failure. A score of <strong>95% or above</strong> earns an<br>
+        optional invitation to sit the TRL Steward examination.
+      </div>
+
+      <button class="btn-start" id="btnStart" onclick="startExam()">GENERATE EXAM &amp; BEGIN</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="screen" id="screenLoading">
+    <div class="load-wrap">
+      <div class="load-label">Generating Examination</div>
+      <div class="load-bar-outer"><div class="load-bar-inner"></div></div>
+      <div class="load-status" id="loadStatus">Initialising knowledge base...</div>
+    </div>
+  </div>
+
+  <!-- EXAM -->
+  <div class="screen" id="screenExam">
+    <div class="exam-header">
+      <div class="q-counter">Q <strong id="qNum">1</strong> / 30</div>
+      <div class="q-dots" id="qDots"></div>
+    </div>
+    <div id="tagPill"></div>
+    <div class="q-card">
+      <div class="q-num" id="qLabel">Q01</div>
+      <div class="q-text" id="qText"></div>
+    </div>
+    <div class="options" id="optionsWrap"></div>
+    <div class="nav-row">
+      <button class="btn-nav" id="btnPrev" onclick="go(-1)">← PREV</button>
+      <button class="btn-submit" id="btnSubmit" onclick="confirmSubmit()">SUBMIT EXAM</button>
+      <button class="btn-nav" id="btnNext" onclick="go(1)">NEXT →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="screen" id="screenResults">
+    <div class="result-hero">
+      <div class="result-verdict" id="rVerdict"></div>
+      <div class="result-pct" id="rPct"></div>
+      <div class="result-sub">90% required — 27/30 correct to pass</div>
+      <div class="stat-row">
+        <div class="stat-cell">
+          <div class="stat-val" id="rCorrect" style="color:var(--green)">0</div>
+          <div class="stat-lbl">Correct</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val" id="rWrong" style="color:var(--red)">0</div>
+          <div class="stat-lbl">Incorrect</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val" id="rSkipped" style="color:var(--amber)">0</div>
+          <div class="stat-lbl">Skipped</div>
+        </div>
+      </div>
+      <div id="trlInvite" style="display:none; background:var(--surface); border:1px solid var(--gold); border-left:3px solid var(--gold); padding:16px 20px; margin-bottom:24px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold); text-align:left; line-height:1.8;">
+        ★ DISTINCTION — 95%+ ACHIEVED<br>
+        <span style="color:var(--muted)">You have qualified for an optional invitation to sit the TRL Stewards Certification Exam. Contact the Commissioner's Office to redeem.</span>
+      </div>
+      <button class="btn-retake" onclick="resetExam()">RETAKE EXAM</button>
+    </div>
+    <div class="review-section">
+      <div class="review-hdr">Full Question Review</div>
+      <div id="reviewWrap"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SYSTEM_PROMPT = `You are the WSC (World Series Championship) Stewards Certification Examiner. Generate exactly 30 multiple-choice questions testing deep knowledge across three knowledge pillars.
+
+PILLAR 1 — WSC REGULATIONS (12 questions):
+- WSC Unified Code v1.2: administrative authority, evidence mandate, reporting deadlines (Saturday 12hrs, Sunday 24hrs), PP system (Tier 1-4, thresholds at 6PP/10PP/12PP, decay 2PP per 3 clean races)
+- Rules of Engagement: Axle Rule (inside and outside moves), Calculated Divebomb (0.3s-0.5s gap, 3 conditions: Axle Rule, total car control, zero contact)
+- Defensive standards: one defensive move allowed, no reactive movement in braking zone
+- Track limits: strike system (1-2 warning, 3 B&W flag, 4+ +3s per offense), safe rejoins (100% responsibility, min +5s), special zone modifiers (+1PP for pit entry/exit/light zone)
+- Appeals and 40-Second Rule: 40 uninterrupted seconds of POV footage required
+- Netcode mitigation: may be mitigating factor but does not fully exonerate
+- PP Calculator: base severity tiers, impact modifiers (no position loss -1PP, multi-car +1PP, race-ending +2PP), behavioral modifiers (repeat +1PP, pattern +2PP)
+- Steward workflow: 4 steps (Review POV, Identify Category, Apply Calculator, Assign and Document)
+- Lap 1/Turn 1 scaling: reduced for accordion effects, increased for reckless divebombs
+- Pit lane speed limit: 60km/h during session
+
+PILLAR 2 — IRL FIA F2 SPORTING REGULATIONS 2025 (10 questions):
+- Race format: qualifying determines Sprint grid, Sprint grid determines Feature grid
+- Tyre rules: mandatory two compound usage in Feature race (unless wet tyres used); 5 dry sets (3 prime, 2 option) + 3 wet sets per car per event
+- Penalty types Article 39.3: (a) 5-second stop-go, (b) 10-second stop-go, (c) drive-through, (d) 10-second time penalty + stop-go — driver may cross the Line max twice after notification before serving
+- Reprimands: 5 reprimands in same Championship = 5 grid place penalty for next Feature race (must be 4 of 5 for driving)
+- Safety Car: no overtaking until passing the Line after SC returns to pits; minimum time requirements in marshalling sectors during SC
+- VSC: drivers must stay above minimum ECU time in each marshalling sector
+- Adjustable bodywork (DRS): enabled after completing 1 lap after race start or SC period; less than 1 second gap to car ahead; activated in pre-determined zones only
+- Pit lane: max 6 people working on car plus 1 release person; speed limit 60km/h; no burnouts during qualifying
+- Formation lap: practice starts forbidden; overtaking only permitted if car delayed ahead; must re-establish original starting order before first SC line or enter pit lane
+- Reconnaissance laps: max 2 laps before formation lap; car must stop on grid with engine off after
+- Article 18.2 sanctions: any driver who receives 5 reprimands gets 5 grid place penalty
+- Starting from pit lane: car must not leave garage until pit exit opens for formation lap; work in fast lane permitted for 90 seconds after formation lap commences
+- Race suspension and restart procedures
+- Qualifying: 30-minute session; Monaco uses two-group system
+- Post-race parc fermé rules
+
+PILLAR 3 — IRL FIA F1 / FIA INTERNATIONAL SPORTING CODE PRINCIPLES (8 questions):
+- Flag signals: yellow (danger, no overtaking), double yellow (hazard on track, prepare to slow), red (session stopped), blue (let faster car pass), black (disqualification), black and white diagonal (unsportsmanlike warning), black with orange circle (mechanical issue return to pits), chequered (session end)
+- Driving conduct principles: drivers must not force another driver off the circuit; must not make any maneuver likely to endanger other drivers; may not deliberately obstruct
+- Safety car principles: all cars must form a line behind SC, no overtaking, lapped cars may overtake SC when instructed, pit lane may be closed at safety car deployment
+- Incident definition: FIA ISC — an occurrence or series of occurrences involving one or more drivers that is referred to the stewards
+- Steward authority: may add/delete lap times, issue grid penalties, time penalties, drive-through, DSQ, race bans
+- Document hierarchy: International Sporting Code > Championship Sporting Regulations > Technical Regulations > supplementary regulations
+- Parc fermé: no modifications to car permitted without steward permission; breach can result in exclusion
+- Competitor conduct: all officials, drivers, competitors bound by ISC; conduct bringing sport into disrepute is an offense
+
+Rules:
+- Each question has exactly 4 options labeled A, B, C, D
+- Wrong answers must be plausible — common misconceptions not obviously absurd
+- No hints, no "correct answer" markers in question text
+- Include a "pillar" field: "WSC", "F2", or "F1"
+- 30% easy, 50% moderate, 20% hard edge cases
+- No two questions test the same fact
+
+Return ONLY a valid JSON array, no markdown, no preamble:
+[
+  {
+    "q": "Question text?",
+    "pillar": "WSC",
+    "options": ["A. ...", "B. ...", "C. ...", "D. ..."],
+    "correct": "A",
+    "explanation": "Why A is correct and why others are wrong."
+  }
+]`;
+
+let questions = [], answers = {}, currentQ = 0;
+let timerInterval = null, secondsLeft = 35 * 60;
+
+const PILLAR_TAG = {
+  WSC: '<span class="tag-pill tag-wsc">WSC Regulations</span>',
+  F2:  '<span class="tag-pill tag-f2">FIA F2 Regs</span>',
+  F1:  '<span class="tag-pill tag-f1">FIA F1 / ISC</span>'
+};
+
+async function startExam() {
+  document.getElementById('btnStart').disabled = true;
+  showScreen('screenLoading');
+
+  const steps = [
+    'Initialising knowledge base...',
+    'Loading WSC Unified Code v1.2...',
+    'Loading FIA F2 2025 Sporting Regs...',
+    'Loading FIA ISC principles...',
+    'Generating question bank...',
+    'Applying anti-repeat filter...',
+    'Calibrating difficulty distribution...',
+    'Finalising examination...'
+  ];
+
+  let si = 0;
+  const iv = setInterval(() => {
+    if (si < steps.length) document.getElementById('loadStatus').textContent = steps[si++];
+  }, 700);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 12000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: 'Generate the 30-question WSC Stewards Certification Exam now. Return only the JSON array.' }]
+      })
+    });
+
+    clearInterval(iv);
+    if (!res.ok) { const errText = await res.text(); throw new Error('API error ' + res.status + ': ' + errText.substring(0, 200)); }
+    const data = await res.json();
+    if (data.error) { throw new Error('API returned error: ' + JSON.stringify(data.error)); }
+    let raw = data.content.map(b => b.text || '').join('');
+    raw = raw.replace(/```json[\s\S]*?```|```/g, '').trim();
+
+    // Find JSON array
+    const start = raw.indexOf('[');
+    const end = raw.lastIndexOf(']');
+    if (start === -1 || end === -1 || end <= start) throw new Error('No valid JSON array found — please retry');
+    let jsonStr = raw.slice(start, end + 1);
+    jsonStr = jsonStr.replace(/(,)(\s*[}\]])/g, '$2');
+    const parsed = JSON.parse(jsonStr);
+
+    if (!Array.isArray(parsed) || parsed.length < 20) throw new Error('Insufficient questions returned');
+
+    questions = parsed.slice(0, 30);
+    answers = {};
+    currentQ = 0;
+    secondsLeft = 35 * 60;
+
+    buildDots();
+    renderQ();
+    startTimer();
+    showScreen('screenExam');
+
+  } catch(err) {
+    console.error('Full error:', err);
+    console.error('Raw response:', typeof raw !== 'undefined' ? raw.substring(0, 500) : 'no raw');
+    clearInterval(iv);
+    showScreen('screenIntro');
+    document.getElementById('btnStart').disabled = false;
+    const existing = document.querySelector('.err-box');
+    if (existing) existing.remove();
+    document.querySelector('.intro-wrap').insertAdjacentHTML('beforeend',
+      `<div class="err-box"><strong>EXAM GENERATION FAILED</strong>${err.message ? err.message : JSON.stringify(err)}<br><button class="btn-retry" onclick="startExam()">RETRY</button></div>`
+    );
+  }
+}
+
+function buildDots() {
+  const wrap = document.getElementById('qDots');
+  wrap.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'q-dot';
+    d.id = `dot-${i}`;
+    wrap.appendChild(d);
+  });
+}
+
+function updateDots() {
+  questions.forEach((_, i) => {
+    const d = document.getElementById(`dot-${i}`);
+    if (!d) return;
+    d.className = 'q-dot';
+    if (i === currentQ) d.classList.add('active');
+    else if (answers[i] !== undefined) d.classList.add('done');
+  });
+  const answered = Object.keys(answers).length;
+  document.getElementById('progFill').style.width = `${(answered / questions.length) * 100}%`;
+}
+
+function renderQ() {
+  const q = questions[currentQ];
+  document.getElementById('qNum').textContent = currentQ + 1;
+  document.getElementById('qLabel').textContent = `Q${String(currentQ + 1).padStart(2, '0')}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('tagPill').innerHTML = PILLAR_TAG[q.pillar] || '';
+
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const letter = ['A','B','C','D'][i];
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[currentQ] === letter ? ' selected' : '');
+    btn.innerHTML = `<span class="opt-letter">${letter}</span><span>${opt.replace(/^[A-D]\.\s*/, '')}</span>`;
+    btn.onclick = () => pick(letter);
+    wrap.appendChild(btn);
+  });
+
+  document.getElementById('btnPrev').disabled = currentQ === 0;
+  document.getElementById('btnNext').disabled = currentQ === questions.length - 1;
+  updateDots();
+}
+
+function pick(letter) {
+  answers[currentQ] = letter;
+  renderQ();
+}
+
+function go(dir) {
+  currentQ = Math.max(0, Math.min(questions.length - 1, currentQ + dir));
+  renderQ();
+}
+
+function confirmSubmit() {
+  const unanswered = questions.length - Object.keys(answers).length;
+  if (unanswered > 0 && !confirm(`${unanswered} question(s) unanswered. Submit anyway?`)) return;
+  submitExam();
+}
+
+function submitExam() {
+  clearInterval(timerInterval);
+  let correct = 0, wrong = 0, skipped = 0;
+  const items = [];
+
+  questions.forEach((q, i) => {
+    const ua = answers[i];
+    if (!ua) { skipped++; items.push({ q, ua, status: 'skipped', i }); }
+    else if (ua === q.correct) { correct++; items.push({ q, ua, status: 'correct', i }); }
+    else { wrong++; items.push({ q, ua, status: 'incorrect', i }); }
+  });
+
+  const pct = Math.round((correct / questions.length) * 100);
+  const passed = pct >= 90;
+  const distinction = pct >= 95;
+
+  document.getElementById('rVerdict').textContent = passed ? 'CERTIFIED' : 'FAILED';
+  document.getElementById('rVerdict').className = `result-verdict ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('rPct').textContent = `${pct}%`;
+  document.getElementById('rPct').className = `result-pct ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('rCorrect').textContent = correct;
+  document.getElementById('rWrong').textContent = wrong;
+  document.getElementById('rSkipped').textContent = skipped;
+  document.getElementById('trlInvite').style.display = distinction ? 'block' : 'none';
+
+  const wrap = document.getElementById('reviewWrap');
+  wrap.innerHTML = '';
+  items.forEach(({ q, ua, status, i }) => {
+    const div = document.createElement('div');
+    div.className = `rv-item ${status}`;
+    const correctText = q.options.find(o => o.startsWith(q.correct)) || q.correct;
+    const userText = ua ? (q.options.find(o => o.startsWith(ua)) || ua) : null;
+    div.innerHTML = `
+      <div class="rv-q"><strong>Q${i+1}.</strong> ${q.q} ${PILLAR_TAG[q.pillar] || ''}</div>
+      <div class="rv-tags">
+        ${status === 'correct' ? `<span class="tag tag-ok">✓ ${userText}</span>` : ''}
+        ${status === 'incorrect' ? `<span class="tag tag-bad">✗ Your answer: ${userText}</span><span class="tag tag-ok">✓ Correct: ${correctText}</span>` : ''}
+        ${status === 'skipped' ? `<span class="tag tag-skip">— Skipped</span><span class="tag tag-ok">✓ Correct: ${correctText}</span>` : ''}
+      </div>
+      <div class="rv-exp">${q.explanation}</div>
+    `;
+    wrap.appendChild(div);
+  });
+
+  showScreen('screenResults');
+  window.scrollTo(0, 0);
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    const el = document.getElementById('timerDisplay');
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.className = 'timer-display';
+    if (secondsLeft <= 300) el.classList.add('warning');
+    if (secondsLeft <= 60) el.classList.add('critical');
+    if (secondsLeft <= 0) { clearInterval(timerInterval); submitExam(); }
+  }, 1000);
+}
+
+function resetExam() {
+  clearInterval(timerInterval);
+  questions = []; answers = {}; currentQ = 0; secondsLeft = 35 * 60;
+  document.getElementById('timerDisplay').textContent = '35:00';
+  document.getElementById('timerDisplay').className = 'timer-display';
+  document.getElementById('progFill').style.width = '0%';
+  document.getElementById('btnStart').disabled = false;
+  document.querySelectorAll('.err-box').forEach(e => e.remove());
+  showScreen('screenIntro');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>

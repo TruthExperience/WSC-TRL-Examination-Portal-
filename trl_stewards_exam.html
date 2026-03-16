@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRL Stewards Certification Exam</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;700&display=swap');
+
+  :root {
+    --red: #CC0000;
+    --red-dark: #990000;
+    --red-glow: rgba(204,0,0,0.15);
+    --black: #060608;
+    --surface: #0E0E12;
+    --surface2: #16161C;
+    --border: #2A2A35;
+    --text: #E8E8F0;
+    --muted: #6B6B80;
+    --green: #00C853;
+    --amber: #FFB300;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .trl-badge {
+    background: var(--red);
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 6px 14px;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+
+  .header-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .timer-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px var(--red-glow);
+  }
+
+  .timer-display.warning { color: var(--amber); text-shadow: 0 0 20px rgba(255,179,0,0.3); }
+  .timer-display.critical { color: var(--red); animation: pulse 1s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red-dark), var(--red));
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px var(--red);
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* INTRO SCREEN */
+  .intro-hero {
+    text-align: center;
+    padding: 60px 20px 40px;
+  }
+
+  .intro-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 80px);
+    letter-spacing: 6px;
+    line-height: 0.9;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .intro-title span { color: var(--red); }
+
+  .intro-subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .spec-cell {
+    background: var(--surface);
+    padding: 24px 20px;
+    text-align: center;
+  }
+
+  .spec-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--red);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .spec-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .mandate-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  .mandate-box strong { color: var(--text); }
+
+  .btn-primary {
+    display: block;
+    width: 100%;
+    background: var(--red);
+    color: white;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .btn-primary:hover { background: var(--red-dark); transform: translateY(-1px); }
+  .btn-primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+
+  /* LOADING SCREEN */
+  .loading-screen {
+    text-align: center;
+    padding: 100px 20px;
+  }
+
+  .loading-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .loading-bar-wrap {
+    width: 300px;
+    height: 2px;
+    background: var(--border);
+    margin: 0 auto 32px;
+    overflow: hidden;
+  }
+
+  .loading-bar-fill {
+    height: 100%;
+    background: var(--red);
+    animation: loading 2s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--red);
+  }
+
+  @keyframes loading {
+    0% { width: 0; margin-left: 0; }
+    50% { width: 100%; margin-left: 0; }
+    100% { width: 0; margin-left: 100%; }
+  }
+
+  .loading-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--red);
+  }
+
+  /* EXAM SCREEN */
+  .exam-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .q-counter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .q-counter span { color: var(--text); font-size: 16px; }
+
+  .q-dots {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    max-width: 400px;
+    justify-content: flex-end;
+  }
+
+  .q-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+
+  .q-dot.answered { background: var(--red); }
+  .q-dot.current { background: var(--text); }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--red);
+  }
+
+  .q-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .option-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 16px 20px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: all 0.15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--red);
+    background: var(--red-glow);
+  }
+
+  .option-btn.selected {
+    border-color: var(--red);
+    background: var(--red-glow);
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  .opt-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    min-width: 20px;
+    margin-top: 1px;
+    transition: color 0.15s;
+  }
+
+  .option-btn.selected .opt-letter { color: var(--red); }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-nav {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .btn-nav:hover:not(:disabled) { border-color: var(--text); color: var(--text); }
+  .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .btn-submit-exam {
+    background: var(--red);
+    border: none;
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    padding: 12px 32px;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+
+  .btn-submit-exam:hover { background: var(--red-dark); }
+  .btn-submit-exam:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+  /* RESULTS SCREEN */
+  .result-hero {
+    text-align: center;
+    padding: 48px 20px 40px;
+  }
+
+  .result-verdict {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    letter-spacing: 8px;
+    margin-bottom: 8px;
+  }
+
+  .result-verdict.pass { color: var(--green); text-shadow: 0 0 40px rgba(0,200,83,0.3); }
+  .result-verdict.fail { color: var(--red); text-shadow: 0 0 40px rgba(204,0,0,0.3); }
+
+  .result-score-big {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .result-score-big.pass { color: var(--green); }
+  .result-score-big.fail { color: var(--red); }
+
+  .result-threshold {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .stat-cell {
+    background: var(--surface);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .review-section { margin-top: 40px; }
+
+  .review-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .review-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 12px;
+  }
+
+  .review-item.correct { border-left-color: var(--green); }
+  .review-item.incorrect { border-left-color: var(--red); }
+  .review-item.skipped { border-left-color: var(--amber); }
+
+  .review-q {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .review-answer-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+
+  .tag {
+    padding: 3px 10px;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .tag-correct { background: rgba(0,200,83,0.15); color: var(--green); border: 1px solid rgba(0,200,83,0.3); }
+  .tag-wrong { background: rgba(204,0,0,0.15); color: #ff6b6b; border: 1px solid rgba(204,0,0,0.3); }
+  .tag-skipped { background: rgba(255,179,0,0.1); color: var(--amber); border: 1px solid rgba(255,179,0,0.3); }
+
+  .review-explanation {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .error-box {
+    background: var(--surface);
+    border: 1px solid var(--red);
+    padding: 24px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin: 40px 0;
+  }
+
+  .error-box strong { color: var(--red); display: block; margin-bottom: 8px; font-size: 16px; }
+
+  .btn-retry {
+    margin-top: 16px;
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .btn-retry:hover { background: var(--red-glow); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="trl-badge">TRL</div>
+    <div class="header-title">Stewards Certification Exam</div>
+  </div>
+  <div class="timer-display" id="timerDisplay">45:00</div>
+</div>
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+</div>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="screen active" id="screenIntro">
+    <div class="intro-hero">
+      <div class="intro-title">STEWARDS<br><span>CERTIFICATION</span></div>
+      <div class="intro-subtitle">Truth Racing League — Official Examination</div>
+
+      <div class="spec-grid">
+        <div class="spec-cell">
+          <div class="spec-val">30</div>
+          <div class="spec-label">Questions</div>
+        </div>
+        <div class="spec-cell">
+          <div class="spec-val">45</div>
+          <div class="spec-label">Minutes</div>
+        </div>
+        <div class="spec-cell">
+          <div class="spec-val">95%</div>
+          <div class="spec-label">Pass Threshold</div>
+        </div>
+      </div>
+
+      <div class="mandate-box">
+        <strong>EXAMINATION MANDATE</strong><br>
+        No hints. No second chances on the clock. No partial credit.<br>
+        You must answer <strong>29 of 30 questions correctly</strong> to pass.<br>
+        A score of 94% or below is an <strong>Institutional Failure</strong>.<br>
+        Merit cannot be rounded up. <strong>Your seat is earned, not given.</strong>
+      </div>
+
+      <button class="btn-primary" id="btnStart" onclick="startExam()">
+        GENERATE EXAM &amp; BEGIN
+      </button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="screen" id="screenLoading">
+    <div class="loading-screen">
+      <div class="loading-label">Generating Examination</div>
+      <div class="loading-bar-wrap"><div class="loading-bar-fill"></div></div>
+      <div class="loading-status" id="loadingStatus">Compiling TRL Rulebook...</div>
+    </div>
+  </div>
+
+  <!-- EXAM -->
+  <div class="screen" id="screenExam">
+    <div class="exam-meta">
+      <div class="q-counter">Question <span id="qNum">1</span> of 30</div>
+      <div class="q-dots" id="qDots"></div>
+    </div>
+    <div class="question-card">
+      <div class="q-number" id="qLabel">Q01</div>
+      <div class="q-text" id="qText"></div>
+    </div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="nav-row">
+      <button class="btn-nav" id="btnPrev" onclick="navigate(-1)">← PREV</button>
+      <button class="btn-submit-exam" id="btnSubmit" onclick="confirmSubmit()">SUBMIT EXAM</button>
+      <button class="btn-nav" id="btnNext" onclick="navigate(1)">NEXT →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="screen" id="screenResults">
+    <div class="result-hero">
+      <div class="result-verdict" id="resultVerdict"></div>
+      <div class="result-score-big" id="resultScore"></div>
+      <div class="result-threshold">95% required to pass (29/30 correct)</div>
+      <div class="result-stats">
+        <div class="stat-cell">
+          <div class="stat-val" id="statCorrect" style="color:var(--green)">0</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val" id="statWrong" style="color:var(--red)">0</div>
+          <div class="stat-label">Incorrect</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val" id="statSkipped" style="color:var(--amber)">0</div>
+          <div class="stat-label">Skipped</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="resetExam()">RETAKE EXAM</button>
+    </div>
+    <div class="review-section">
+      <div class="review-title">Question Review</div>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let questions = [];
+let answers = {};
+let currentQ = 0;
+let timerInterval = null;
+let secondsLeft = 45 * 60;
+let examStarted = false;
+
+const SYSTEM_PROMPT = `You are the TRL (Truth Racing League) Stewards Certification Examiner. Generate exactly 30 multiple-choice questions testing deep knowledge of TRL stewardship, regulations, and judicial procedures.
+
+Cover these topic areas proportionally:
+- TRL Stewards Charter v3.0 (judicial process, composition, jurisdiction, evidence standards, ruling deadlines)
+- TRL Universal Sporting Code (USC) — offense tiers, penalties, definitions
+- PP Calculator — base tiers, impact modifiers, zone modifiers, behavioral modifiers
+- Calculated Divebomb standard — the 3 conditions, gap ranges, legal vs illegal
+- TRL Articles of Expulsion v3.0 — Lifetime Ban vs Permanent Ban offenses, Commissioner Exclusion List, Statute of Limitations
+- Probation framework — 3 triggers, escalation rules, stacking
+- BSAC Charter v3.0 — jurisdiction, sentencing levels, referral triggers
+- TRL Charter v9.0 — separation of powers, assist matrix, PP thresholds
+- Evidence standards — 40-second rule, telemetry sovereignty, netcode assessment
+- Racing TP Protocol, submission validity gate, ruling deadlines
+
+Rules for question generation:
+- Questions must be specific and technical — no vague generalities
+- No two questions should test the same fact
+- Options must be plausible — wrong answers should be common misconceptions, not obviously absurd
+- Difficulty should range: 30% straightforward, 50% moderate, 20% difficult edge cases
+- Do NOT include hints, explanations, or "correct answer" markers in the question text
+- Each question needs exactly 4 options labeled A, B, C, D
+
+Respond with ONLY a valid JSON array. No markdown. No preamble. No explanation. Format:
+[
+  {
+    "q": "Question text here?",
+    "options": ["A. Option one", "B. Option two", "C. Option three", "D. Option four"],
+    "correct": "A",
+    "explanation": "Brief explanation of why this is correct and why others are wrong."
+  }
+]`;
+
+async function startExam() {
+  document.getElementById('btnStart').disabled = true;
+  showScreen('screenLoading');
+
+  const statuses = [
+    'Compiling TRL Rulebook...',
+    'Loading Stewards Charter v3.0...',
+    'Importing PP Calculator...',
+    'Generating question bank...',
+    'Applying anti-repeat filters...',
+    'Finalising examination...'
+  ];
+  let si = 0;
+  const statusInterval = setInterval(() => {
+    if (si < statuses.length) {
+      document.getElementById('loadingStatus').textContent = statuses[si++];
+    }
+  }, 800);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 12000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: 'Generate the 30-question TRL Stewards Certification Exam now. Return only the JSON array.' }]
+      })
+    });
+
+    clearInterval(statusInterval);
+    if (!res.ok) { const errText = await res.text(); throw new Error('API error ' + res.status + ': ' + errText.substring(0, 200)); }
+    const data = await res.json();
+    if (data.error) { throw new Error('API returned error: ' + JSON.stringify(data.error)); }
+    let raw = data.content.map(b => b.text || '').join('');
+    raw = raw.replace(/```json[\s\S]*?```|```/g, '').trim();
+    const start = raw.indexOf('[');
+    const end = raw.lastIndexOf(']');
+    if (start === -1 || end === -1 || end <= start) throw new Error('No valid JSON array found — please retry');
+    let jsonStr = raw.slice(start, end + 1);
+    jsonStr = jsonStr.replace(/(,)(\s*[}\]])/g, '$2');
+    const parsed = JSON.parse(jsonStr);
+
+    if (!Array.isArray(parsed) || parsed.length < 20) throw new Error('Invalid question set');
+
+    questions = parsed.slice(0, 30);
+    answers = {};
+    currentQ = 0;
+    secondsLeft = 45 * 60;
+
+    buildDots();
+    renderQuestion();
+    startTimer();
+    showScreen('screenExam');
+
+  } catch(err) {
+    console.error('Full error:', err);
+    console.error('Raw response:', typeof raw !== 'undefined' ? raw.substring(0, 500) : 'no raw');
+    clearInterval(statusInterval);
+    showScreen('screenIntro');
+    document.getElementById('btnStart').disabled = false;
+    document.querySelector('.intro-hero').insertAdjacentHTML('beforeend',
+      `<div class="error-box"><strong>EXAM GENERATION FAILED</strong>${err.message ? err.message : JSON.stringify(err)}<br><button class="btn-retry" onclick="startExam()">RETRY</button></div>`
+    );
+  }
+}
+
+function buildDots() {
+  const wrap = document.getElementById('qDots');
+  wrap.innerHTML = '';
+  for (let i = 0; i < questions.length; i++) {
+    const d = document.createElement('div');
+    d.className = 'q-dot';
+    d.id = `dot-${i}`;
+    wrap.appendChild(d);
+  }
+}
+
+function updateDots() {
+  for (let i = 0; i < questions.length; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    if (!d) continue;
+    d.className = 'q-dot';
+    if (i === currentQ) d.classList.add('current');
+    else if (answers[i] !== undefined) d.classList.add('answered');
+  }
+  document.getElementById('progressBar').style.width =
+    `${(Object.keys(answers).length / questions.length) * 100}%`;
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('qNum').textContent = currentQ + 1;
+  document.getElementById('qLabel').textContent = `Q${String(currentQ + 1).padStart(2, '0')}`;
+  document.getElementById('qText').textContent = q.q;
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const letter = ['A','B','C','D'][i];
+    const btn = document.createElement('button');
+    btn.className = 'option-btn' + (answers[currentQ] === letter ? ' selected' : '');
+    btn.innerHTML = `<span class="opt-letter">${letter}</span><span>${opt.replace(/^[A-D]\.\s*/, '')}</span>`;
+    btn.onclick = () => selectAnswer(letter);
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('btnPrev').disabled = currentQ === 0;
+  document.getElementById('btnNext').disabled = currentQ === questions.length - 1;
+  updateDots();
+}
+
+function selectAnswer(letter) {
+  answers[currentQ] = letter;
+  renderQuestion();
+}
+
+function navigate(dir) {
+  currentQ = Math.max(0, Math.min(questions.length - 1, currentQ + dir));
+  renderQuestion();
+}
+
+function confirmSubmit() {
+  const unanswered = questions.length - Object.keys(answers).length;
+  if (unanswered > 0) {
+    if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
+  }
+  submitExam();
+}
+
+function submitExam() {
+  clearInterval(timerInterval);
+  let correct = 0, wrong = 0, skipped = 0;
+  const reviewItems = [];
+
+  questions.forEach((q, i) => {
+    const userAns = answers[i];
+    if (!userAns) {
+      skipped++;
+      reviewItems.push({ q, userAns: null, status: 'skipped', i });
+    } else if (userAns === q.correct) {
+      correct++;
+      reviewItems.push({ q, userAns, status: 'correct', i });
+    } else {
+      wrong++;
+      reviewItems.push({ q, userAns, status: 'incorrect', i });
+    }
+  });
+
+  const pct = Math.round((correct / questions.length) * 100);
+  const passed = pct >= 95;
+
+  document.getElementById('resultVerdict').textContent = passed ? 'CERTIFIED' : 'FAILED';
+  document.getElementById('resultVerdict').className = `result-verdict ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('resultScore').textContent = `${pct}%`;
+  document.getElementById('resultScore').className = `result-score-big ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statSkipped').textContent = skipped;
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+  reviewItems.forEach(({ q, userAns, status, i }) => {
+    const div = document.createElement('div');
+    div.className = `review-item ${status}`;
+    const userOptText = userAns ? q.options.find(o => o.startsWith(userAns)) || userAns : null;
+    const correctOptText = q.options.find(o => o.startsWith(q.correct)) || q.correct;
+    div.innerHTML = `
+      <div class="review-q"><strong>Q${i+1}.</strong> ${q.q}</div>
+      <div class="review-answer-row">
+        ${status === 'correct' ? `<span class="tag tag-correct">✓ ${userOptText}</span>` : ''}
+        ${status === 'incorrect' ? `<span class="tag tag-wrong">✗ Your answer: ${userOptText}</span><span class="tag tag-correct">✓ Correct: ${correctOptText}</span>` : ''}
+        ${status === 'skipped' ? `<span class="tag tag-skipped">— Skipped</span><span class="tag tag-correct">✓ Correct: ${correctOptText}</span>` : ''}
+      </div>
+      <div class="review-explanation">${q.explanation}</div>
+    `;
+    reviewList.appendChild(div);
+  });
+
+  showScreen('screenResults');
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    const display = document.getElementById('timerDisplay');
+    display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    display.className = 'timer-display';
+    if (secondsLeft <= 300) display.classList.add('warning');
+    if (secondsLeft <= 60) display.classList.add('critical');
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      submitExam();
+    }
+  }, 1000);
+}
+
+function resetExam() {
+  clearInterval(timerInterval);
+  questions = [];
+  answers = {};
+  currentQ = 0;
+  secondsLeft = 45 * 60;
+  document.getElementById('timerDisplay').textContent = '45:00';
+  document.getElementById('timerDisplay').className = 'timer-display';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('btnStart').disabled = false;
+  // Remove any error boxes
+  document.querySelectorAll('.error-box').forEach(e => e.remove());
+  showScreen('screenIntro');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
