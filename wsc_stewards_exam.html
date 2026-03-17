@@ -19,7 +19,6 @@
     --green: #00C853;
     --red: #CC0000;
     --amber: #FFB300;
-    --light-gray: #1A1A22;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -63,7 +62,6 @@
     letter-spacing: 2px;
     padding: 6px 14px;
     clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-    font-weight: 900;
   }
 
   .header-title {
@@ -97,11 +95,10 @@
   }
 
   .container { max-width: 800px; margin: 0 auto; padding: 36px 20px 80px; }
-
   .screen { display: none; }
   .screen.active { display: block; }
 
-  /* ---- INTRO ---- */
+  /* INTRO */
   .intro-wrap { text-align: center; padding: 52px 16px 36px; }
 
   .intro-eyebrow {
@@ -135,18 +132,18 @@
 
   .spec-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
-    margin-bottom: 32px;
+    margin-bottom: 28px;
   }
 
-  .spec-cell { background: var(--surface); padding: 22px 16px; text-align: center; }
+  .spec-cell { background: var(--surface); padding: 20px 12px; text-align: center; }
 
   .spec-val {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 44px;
+    font-size: 38px;
     color: var(--gold);
     letter-spacing: 2px;
     line-height: 1;
@@ -161,7 +158,7 @@
     margin-top: 5px;
   }
 
-  .pillar-grid {
+  .tier-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
@@ -170,34 +167,45 @@
     margin-bottom: 28px;
   }
 
-  .pillar-cell {
+  .tier-cell {
     background: var(--surface);
-    padding: 16px 14px;
+    padding: 18px 14px;
     text-align: center;
     border-top: 2px solid transparent;
   }
 
-  .pillar-cell:nth-child(1) { border-top-color: var(--gold); }
-  .pillar-cell:nth-child(2) { border-top-color: #4FC3F7; }
-  .pillar-cell:nth-child(3) { border-top-color: #81C784; }
+  .tier-cell.junior { border-top-color: var(--amber); }
+  .tier-cell.senior { border-top-color: #4FC3F7; }
+  .tier-cell.chief { border-top-color: var(--green); }
 
-  .pillar-title {
+  .tier-name {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 15px;
+    font-size: 18px;
     letter-spacing: 2px;
     margin-bottom: 4px;
   }
 
-  .pillar-cell:nth-child(1) .pillar-title { color: var(--gold); }
-  .pillar-cell:nth-child(2) .pillar-title { color: #4FC3F7; }
-  .pillar-cell:nth-child(3) .pillar-title { color: #81C784; }
+  .tier-cell.junior .tier-name { color: var(--amber); }
+  .tier-cell.senior .tier-name { color: #4FC3F7; }
+  .tier-cell.chief .tier-name { color: var(--green); }
 
-  .pillar-desc {
+  .tier-score {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .tier-cell.junior .tier-score { color: var(--amber); }
+  .tier-cell.senior .tier-score { color: #4FC3F7; }
+  .tier-cell.chief .tier-score { color: var(--green); }
+
+  .tier-desc {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 9px;
     color: var(--muted);
     letter-spacing: 1px;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   .mandate-box {
@@ -232,7 +240,7 @@
   .btn-start:hover { filter: brightness(1.1); transform: translateY(-1px); }
   .btn-start:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; filter: none; }
 
-  /* ---- LOADING ---- */
+  /* LOADING */
   .load-wrap { text-align: center; padding: 110px 20px; }
 
   .load-label {
@@ -248,35 +256,22 @@
   .load-bar-inner { height: 100%; background: var(--gold); animation: sweep 1.8s ease-in-out infinite; box-shadow: 0 0 8px var(--gold-glow); }
   @keyframes sweep { 0%{width:0;margin-left:0} 50%{width:100%;margin-left:0} 100%{width:0;margin-left:100%} }
 
-  .load-status {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--gold);
-    min-height: 20px;
-  }
+  .load-status { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--gold); min-height: 20px; }
 
-  /* ---- EXAM ---- */
+  /* EXAM */
   .exam-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
+    margin-bottom: 12px;
     padding-bottom: 18px;
     border-bottom: 1px solid var(--border);
   }
 
-  .q-counter {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-
+  .q-counter { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
   .q-counter strong { color: var(--text); font-size: 15px; }
 
   .q-dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 380px; justify-content: flex-end; }
-
   .q-dot { width: 8px; height: 8px; background: var(--border); transition: background 0.2s; }
   .q-dot.done { background: var(--gold); }
   .q-dot.active { background: var(--text); }
@@ -292,8 +287,8 @@
   }
 
   .tag-wsc { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
-  .tag-f2 { background: rgba(79,195,247,0.1); color: #4FC3F7; border: 1px solid rgba(79,195,247,0.3); }
   .tag-f1 { background: rgba(129,199,132,0.1); color: #81C784; border: 1px solid rgba(129,199,132,0.3); }
+  .tag-f2 { background: rgba(79,195,247,0.1); color: #4FC3F7; border: 1px solid rgba(79,195,247,0.3); }
 
   .q-card {
     background: var(--surface);
@@ -303,15 +298,7 @@
     margin-bottom: 20px;
   }
 
-  .q-num {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
+  .q-num { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
   .q-text { font-size: 15px; line-height: 1.65; color: var(--text); }
 
   .options { display: flex; flex-direction: column; gap: 9px; margin-bottom: 26px; }
@@ -336,16 +323,7 @@
   .opt.selected { border-color: var(--gold); background: var(--gold-glow); }
   .opt:disabled { cursor: default; }
 
-  .opt-letter {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--muted);
-    min-width: 18px;
-    margin-top: 2px;
-    transition: color 0.13s;
-  }
-
+  .opt-letter { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 700; color: var(--muted); min-width: 18px; margin-top: 2px; transition: color 0.13s; }
   .opt.selected .opt-letter { color: var(--gold); }
 
   .nav-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
@@ -380,9 +358,8 @@
   }
 
   .btn-submit:hover { filter: brightness(1.1); }
-  .btn-submit:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; filter: none; }
 
-  /* ---- RESULTS ---- */
+  /* RESULTS */
   .result-hero { text-align: center; padding: 44px 16px 36px; }
 
   .result-verdict {
@@ -395,6 +372,19 @@
 
   .result-verdict.pass { color: var(--green); text-shadow: 0 0 40px rgba(0,200,83,0.25); }
   .result-verdict.fail { color: var(--red); text-shadow: 0 0 40px rgba(204,0,0,0.25); }
+
+  .result-tier {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .result-tier.junior { color: var(--amber); }
+  .result-tier.senior { color: #4FC3F7; }
+  .result-tier.chief { color: var(--green); }
 
   .result-pct {
     font-family: 'IBM Plex Mono', monospace;
@@ -412,7 +402,54 @@
     letter-spacing: 3px;
     color: var(--muted);
     text-transform: uppercase;
-    margin-bottom: 36px;
+    margin-bottom: 28px;
+  }
+
+  .division-banner {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.9;
+    text-align: left;
+  }
+
+  .division-banner.f1 { border-color: rgba(129,199,132,0.4); border-left-color: #81C784; background: rgba(129,199,132,0.05); }
+  .division-banner.f2 { border-color: rgba(79,195,247,0.4); border-left-color: #4FC3F7; background: rgba(79,195,247,0.05); }
+  .division-banner.both { border-color: rgba(201,168,76,0.4); border-left-color: var(--gold); background: var(--gold-glow); }
+
+  .division-banner strong { display: block; font-size: 14px; margin-bottom: 6px; }
+  .division-banner.f1 strong { color: #81C784; }
+  .division-banner.f2 strong { color: #4FC3F7; }
+  .division-banner.both strong { color: var(--gold); }
+  .division-banner span { color: var(--muted); }
+
+  .breakdown-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .breakdown-cell { background: var(--surface); padding: 16px; text-align: center; }
+
+  .breakdown-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .breakdown-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
   }
 
   .stat-row {
@@ -421,25 +458,27 @@
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
-    margin-bottom: 32px;
+    margin-bottom: 28px;
   }
 
   .stat-cell { background: var(--surface); padding: 18px; text-align: center; }
+  .stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .stat-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
 
-  .stat-val {
+  .trl-invite {
+    background: var(--surface);
+    border: 1px solid var(--gold);
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px;
+    margin-bottom: 24px;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 4px;
+    font-size: 11px;
+    color: var(--gold);
+    text-align: left;
+    line-height: 1.8;
   }
 
-  .stat-lbl {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
+  .trl-invite span { color: var(--muted); }
 
   .btn-retake {
     display: block; width: 100%;
@@ -483,7 +522,6 @@
   .rv-item.skipped { border-left-color: var(--amber); }
 
   .rv-q { font-size: 13px; line-height: 1.55; color: var(--text); margin-bottom: 9px; }
-
   .rv-tags { display: flex; gap: 7px; flex-wrap: wrap; font-family: 'IBM Plex Mono', monospace; font-size: 10px; margin-bottom: 8px; }
 
   .tag { padding: 3px 9px; }
@@ -491,13 +529,7 @@
   .tag-bad { background: rgba(204,0,0,0.12); color: #ff6b6b; border: 1px solid rgba(204,0,0,0.25); }
   .tag-skip { background: rgba(255,179,0,0.1); color: var(--amber); border: 1px solid rgba(255,179,0,0.25); }
 
-  .rv-exp {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.6;
-    padding-top: 9px;
-    border-top: 1px solid var(--border);
-  }
+  .rv-exp { font-size: 12px; color: var(--muted); line-height: 1.6; padding-top: 9px; border-top: 1px solid var(--border); }
 
   .err-box {
     background: var(--surface);
@@ -544,56 +576,50 @@
 
 <div class="container">
 
-  <!-- INTRO -->
   <div class="screen active" id="screenIntro">
     <div class="intro-wrap">
       <div class="intro-eyebrow">World Series Championship</div>
       <div class="intro-title">STEWARDS<br><span>CERTIFICATION</span></div>
-      <div class="intro-sub">Official Examination — Three-Pillar Assessment</div>
+      <div class="intro-sub">Official Examination — Division Classification System</div>
 
       <div class="spec-row">
-        <div class="spec-cell">
-          <div class="spec-val">30</div>
-          <div class="spec-label">Questions</div>
-        </div>
-        <div class="spec-cell">
-          <div class="spec-val">35</div>
-          <div class="spec-label">Minutes</div>
-        </div>
-        <div class="spec-cell">
-          <div class="spec-val">90%</div>
-          <div class="spec-label">Pass Threshold</div>
-        </div>
+        <div class="spec-cell"><div class="spec-val">30</div><div class="spec-label">Questions</div></div>
+        <div class="spec-cell"><div class="spec-val">35</div><div class="spec-label">Minutes</div></div>
+        <div class="spec-cell"><div class="spec-val">90%</div><div class="spec-label">Min Pass</div></div>
+        <div class="spec-cell"><div class="spec-val">3</div><div class="spec-label">Tiers</div></div>
       </div>
 
-      <div class="pillar-grid">
-        <div class="pillar-cell">
-          <div class="pillar-title">WSC Regulations</div>
-          <div class="pillar-desc">Unified Code v1.2<br>Stewards Manual v1.2<br>PP Calculator<br>Evidence Standards</div>
+      <div class="tier-grid">
+        <div class="tier-cell junior">
+          <div class="tier-name">Junior Steward</div>
+          <div class="tier-score">90 – 94%</div>
+          <div class="tier-desc">27–28 correct<br>Division classified by<br>strongest subject area</div>
         </div>
-        <div class="pillar-cell">
-          <div class="pillar-title">FIA F2 Regs</div>
-          <div class="pillar-desc">2025 Sporting Regs<br>Race Procedures<br>Safety Car / VSC<br>Penalties & Appeals</div>
+        <div class="tier-cell senior">
+          <div class="tier-name">Senior Steward</div>
+          <div class="tier-score">95 – 97%</div>
+          <div class="tier-desc">Minimum 28–29 correct<br>Division classified by<br>strongest subject area</div>
         </div>
-        <div class="pillar-cell">
-          <div class="pillar-title">FIA F1 Regs</div>
-          <div class="pillar-desc">ISC Principles<br>Driving Standards<br>Steward Procedures<br>Flag & Signal Rules</div>
+        <div class="tier-cell chief">
+          <div class="tier-name">Chief Steward</div>
+          <div class="tier-score">98%+</div>
+          <div class="tier-desc">Near-perfect score<br>Division classified by<br>strongest subject area</div>
         </div>
       </div>
 
       <div class="mandate-box">
         <strong>EXAMINATION MANDATE</strong><br>
-        No hints. No partial credit. Questions are generated fresh each attempt.<br>
-        You must score <strong>27 of 30 or above (90%)</strong> to earn WSC Steward certification.<br>
-        A score of 89% or below is a failure. A score of <strong>95% or above</strong> earns an<br>
-        optional invitation to sit the TRL Steward examination.
+        The exam contains <strong>10 WSC general questions</strong>, <strong>10 F1-specific questions</strong>, and <strong>10 F2-specific questions</strong>.<br>
+        Your tier is determined by your overall score. Your division classification (F1, F2, or Both)<br>
+        is determined by which division's questions you score higher in.<br>
+        <strong>Below 90%:</strong> Fail — full retake required. No partial certification.<br>
+        <strong>98%+:</strong> Qualifies for optional TRL Stewards Certification invitation.
       </div>
 
       <button class="btn-start" id="btnStart" onclick="startExam()">GENERATE EXAM &amp; BEGIN</button>
     </div>
   </div>
 
-  <!-- LOADING -->
   <div class="screen" id="screenLoading">
     <div class="load-wrap">
       <div class="load-label">Generating Examination</div>
@@ -602,7 +628,6 @@
     </div>
   </div>
 
-  <!-- EXAM -->
   <div class="screen" id="screenExam">
     <div class="exam-header">
       <div class="q-counter">Q <strong id="qNum">1</strong> / 30</div>
@@ -616,39 +641,45 @@
     <div class="options" id="optionsWrap"></div>
     <div class="nav-row">
       <button class="btn-nav" id="btnPrev" onclick="go(-1)">← PREV</button>
-      <button class="btn-submit" id="btnSubmit" onclick="confirmSubmit()">SUBMIT EXAM</button>
+      <button class="btn-submit" onclick="confirmSubmit()">SUBMIT EXAM</button>
       <button class="btn-nav" id="btnNext" onclick="go(1)">NEXT →</button>
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="screen" id="screenResults">
     <div class="result-hero">
       <div class="result-verdict" id="rVerdict"></div>
+      <div class="result-tier" id="rTier"></div>
       <div class="result-pct" id="rPct"></div>
-      <div class="result-sub">90% required — 27/30 correct to pass</div>
-      <div class="stat-row">
-        <div class="stat-cell">
-          <div class="stat-val" id="rCorrect" style="color:var(--green)">0</div>
-          <div class="stat-lbl">Correct</div>
+      <div class="result-sub" id="rSub"></div>
+      <div class="division-banner" id="rDivision"></div>
+      <div class="breakdown-row">
+        <div class="breakdown-cell">
+          <div class="breakdown-val" id="bWSC" style="color:var(--gold)">0/10</div>
+          <div class="breakdown-lbl">WSC General</div>
         </div>
-        <div class="stat-cell">
-          <div class="stat-val" id="rWrong" style="color:var(--red)">0</div>
-          <div class="stat-lbl">Incorrect</div>
+        <div class="breakdown-cell">
+          <div class="breakdown-val" id="bF1" style="color:#81C784">0/10</div>
+          <div class="breakdown-lbl">F1 Questions</div>
         </div>
-        <div class="stat-cell">
-          <div class="stat-val" id="rSkipped" style="color:var(--amber)">0</div>
-          <div class="stat-lbl">Skipped</div>
+        <div class="breakdown-cell">
+          <div class="breakdown-val" id="bF2" style="color:#4FC3F7">0/10</div>
+          <div class="breakdown-lbl">F2 Questions</div>
         </div>
       </div>
-      <div id="trlInvite" style="display:none; background:var(--surface); border:1px solid var(--gold); border-left:3px solid var(--gold); padding:16px 20px; margin-bottom:24px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold); text-align:left; line-height:1.8;">
-        ★ DISTINCTION — 95%+ ACHIEVED<br>
-        <span style="color:var(--muted)">You have qualified for an optional invitation to sit the TRL Stewards Certification Exam. Contact the Commissioner's Office to redeem.</span>
+      <div class="stat-row">
+        <div class="stat-cell"><div class="stat-val" id="rCorrect" style="color:var(--green)">0</div><div class="stat-lbl">Correct</div></div>
+        <div class="stat-cell"><div class="stat-val" id="rWrong" style="color:var(--red)">0</div><div class="stat-lbl">Incorrect</div></div>
+        <div class="stat-cell"><div class="stat-val" id="rSkipped" style="color:var(--amber)">0</div><div class="stat-lbl">Skipped</div></div>
+      </div>
+      <div class="trl-invite" id="trlInvite" style="display:none">
+        ★ DISTINCTION — 98%+ ACHIEVED<br>
+        <span>You have qualified for an optional invitation to sit the TRL Stewards Certification Exam. Contact the Commissioner's Office to redeem.</span>
       </div>
       <button class="btn-retake" onclick="resetExam()">RETAKE EXAM</button>
     </div>
     <div class="review-section">
-      <div class="review-hdr">Full Question Review</div>
+      <div class="review-hdr">Full Question Review — With Explanations</div>
       <div id="reviewWrap"></div>
     </div>
   </div>
@@ -656,73 +687,70 @@
 </div>
 
 <script>
-const SYSTEM_PROMPT = `You are the WSC (World Series Championship) Stewards Certification Examiner. Generate exactly 30 multiple-choice questions testing deep knowledge across three knowledge pillars.
+const SYSTEM_PROMPT = `You are the WSC (World Series Championship) Stewards Certification Examiner. Generate exactly 30 multiple-choice questions split across three categories.
 
-PILLAR 1 — WSC REGULATIONS (12 questions):
-- WSC Unified Code v1.2: administrative authority, evidence mandate, reporting deadlines (Saturday 12hrs, Sunday 24hrs), PP system (Tier 1-4, thresholds at 6PP/10PP/12PP, decay 2PP per 3 clean races)
-- Rules of Engagement: Axle Rule (inside and outside moves), Calculated Divebomb (0.3s-0.5s gap, 3 conditions: Axle Rule, total car control, zero contact)
-- Defensive standards: one defensive move allowed, no reactive movement in braking zone
-- Track limits: strike system (1-2 warning, 3 B&W flag, 4+ +3s per offense), safe rejoins (100% responsibility, min +5s), special zone modifiers (+1PP for pit entry/exit/light zone)
-- Appeals and 40-Second Rule: 40 uninterrupted seconds of POV footage required
-- Netcode mitigation: may be mitigating factor but does not fully exonerate
-- PP Calculator: base severity tiers, impact modifiers (no position loss -1PP, multi-car +1PP, race-ending +2PP), behavioral modifiers (repeat +1PP, pattern +2PP)
-- Steward workflow: 4 steps (Review POV, Identify Category, Apply Calculator, Assign and Document)
-- Lap 1/Turn 1 scaling: reduced for accordion effects, increased for reckless divebombs
-- Pit lane speed limit: 60km/h during session
+CRITICAL: You MUST generate exactly:
+- 10 questions with "pillar": "WSC" (general WSC rules)
+- 10 questions with "pillar": "F1" (F1 division specific)
+- 10 questions with "pillar": "F2" (F2 division specific)
 
-PILLAR 2 — IRL FIA F2 SPORTING REGULATIONS 2025 (10 questions):
-- Race format: qualifying determines Sprint grid, Sprint grid determines Feature grid
-- Tyre rules: mandatory two compound usage in Feature race (unless wet tyres used); 5 dry sets (3 prime, 2 option) + 3 wet sets per car per event
-- Penalty types Article 39.3: (a) 5-second stop-go, (b) 10-second stop-go, (c) drive-through, (d) 10-second time penalty + stop-go — driver may cross the Line max twice after notification before serving
-- Reprimands: 5 reprimands in same Championship = 5 grid place penalty for next Feature race (must be 4 of 5 for driving)
-- Safety Car: no overtaking until passing the Line after SC returns to pits; minimum time requirements in marshalling sectors during SC
-- VSC: drivers must stay above minimum ECU time in each marshalling sector
-- Adjustable bodywork (DRS): enabled after completing 1 lap after race start or SC period; less than 1 second gap to car ahead; activated in pre-determined zones only
-- Pit lane: max 6 people working on car plus 1 release person; speed limit 60km/h; no burnouts during qualifying
-- Formation lap: practice starts forbidden; overtaking only permitted if car delayed ahead; must re-establish original starting order before first SC line or enter pit lane
-- Reconnaissance laps: max 2 laps before formation lap; car must stop on grid with engine off after
-- Article 18.2 sanctions: any driver who receives 5 reprimands gets 5 grid place penalty
-- Starting from pit lane: car must not leave garage until pit exit opens for formation lap; work in fast lane permitted for 90 seconds after formation lap commences
-- Race suspension and restart procedures
-- Qualifying: 30-minute session; Monaco uses two-group system
-- Post-race parc fermé rules
+CATEGORY 1 — WSC GENERAL (pillar: "WSC") — 10 questions:
+- WSC Unified Code v1.2: administrative authority, evidence mandate, reporting deadlines (Saturday 12hrs, Sunday 24hrs)
+- PP system: Tier 1 Minor 1-2PP, Tier 2 Moderate 3-4PP, Tier 3 Major 5-6PP, Tier 4 Severe 7-10PP
+- PP thresholds: 6PP = Formal Licence Review, 10PP = One-Race Ban, 12PP = Multi-race ban
+- PP decay: 2PP per 3 clean races, expire after 6 race weekends
+- Rules of Engagement: Axle Rule (inside: front axle alongside defender's rear axle before apex; outside: attacker ahead at apex)
+- Calculated Divebomb: 0.3s-0.5s gap, 3 conditions (Axle Rule met, total car control, zero contact), 100% attacker responsibility
+- Defensive standards: one move on a straight, no reactive movement in braking zone, one car width returning to line
+- Track limits: strike system (1-2 warning, 3 B&W flag, 4+ = +3s per offense), safe rejoin 100% responsibility minimum +5s
+- Zone modifiers +1PP: pit entry, pit exit, pit exit light zone, Lap 1/Turn 1
+- 40-Second Rule: 40 uninterrupted seconds of POV footage required for appeals
+- Netcode: mitigating factor only, does not fully exonerate
+- PP Calculator impact modifiers: no position loss -1PP, multi-car +1PP, race-ending +2PP
+- Behavioral modifiers: first offense baseline, repeat +1PP, pattern +2PP
+- Steward workflow: (1) Review POV, (2) Identify Category, (3) Apply Calculator, (4) Assign and Document
+- Ticket format: Lap Number, Session Type, Drivers Involved, 3-4 sentence neutral overview
+- Draft Proposal: max 3 tickets per team per race, 10-min post-race cooldown, 5-min between submissions
 
-PILLAR 3 — IRL FIA F1 / FIA INTERNATIONAL SPORTING CODE PRINCIPLES (8 questions):
-- Flag signals: yellow (danger, no overtaking), double yellow (hazard on track, prepare to slow), red (session stopped), blue (let faster car pass), black (disqualification), black and white diagonal (unsportsmanlike warning), black with orange circle (mechanical issue return to pits), chequered (session end)
-- Driving conduct principles: drivers must not force another driver off the circuit; must not make any maneuver likely to endanger other drivers; may not deliberately obstruct
-- Safety car principles: all cars must form a line behind SC, no overtaking, lapped cars may overtake SC when instructed, pit lane may be closed at safety car deployment
-- Incident definition: FIA ISC — an occurrence or series of occurrences involving one or more drivers that is referred to the stewards
-- Steward authority: may add/delete lap times, issue grid penalties, time penalties, drive-through, DSQ, race bans
-- Document hierarchy: International Sporting Code > Championship Sporting Regulations > Technical Regulations > supplementary regulations
-- Parc fermé: no modifications to car permitted without steward permission; breach can result in exclusion
-- Competitor conduct: all officials, drivers, competitors bound by ISC; conduct bringing sport into disrepute is an offense
+CATEGORY 2 — F1 DIVISION SPECIFIC (pillar: "F1") — 10 questions:
+- F1 ruling deadline: 90 minutes after the F1 race ends
+- F1 races held at 3:00 PM UK on Saturdays and Sundays
+- Saturday reporting deadline: 12 hours post-race
+- Appeal deadline: 24 hours of ruling publication
+- Appeals valid grounds: new evidence, procedural error, or misapplication only
+- Authorized submitters: TP or registered SD/PO only; if TP is racing, SD becomes primary submitter
+- F1-specific scenario questions about applying WSC rules in F1 context
+- F1 steward jurisdiction, ruling timelines, and escalation procedures
 
-Rules:
+CATEGORY 3 — F2 DIVISION SPECIFIC (pillar: "F2") — 10 questions:
+- F2 ruling deadline: 4 hours after the F2 race ends
+- F2 races held at 5:00 PM UK on Saturdays and Sundays
+- Saturday reporting deadline: 12 hours post-race
+- Sunday reporting deadline: 24 hours post-race
+- Appeal deadline: 24 hours of ruling publication
+- Appeals valid grounds: new evidence, procedural error, or misapplication only
+- Authorized submitters: TP or registered SD/PO only; if TP is racing, SD becomes primary submitter
+- F2-specific scenario questions about applying WSC rules in F2 context
+- F2 steward jurisdiction, ruling timelines, and escalation procedures
+
+QUESTION RULES:
 - Each question has exactly 4 options labeled A, B, C, D
-- Wrong answers must be plausible — common misconceptions not obviously absurd
-- No hints, no "correct answer" markers in question text
-- Include a "pillar" field: "WSC", "F2", or "F1"
-- 30% easy, 50% moderate, 20% hard edge cases
+- Wrong answers must be plausible — common misconceptions, not obviously absurd
+- No hints, no correct answer markers in question text
+- Difficulty: 30% easy, 50% moderate, 20% hard edge cases
 - No two questions test the same fact
+- Include "pillar" field: "WSC", "F1", or "F2"
 
 Return ONLY a valid JSON array, no markdown, no preamble:
-[
-  {
-    "q": "Question text?",
-    "pillar": "WSC",
-    "options": ["A. ...", "B. ...", "C. ...", "D. ..."],
-    "correct": "A",
-    "explanation": "Why A is correct and why others are wrong."
-  }
-]`;
+[{"q":"...","pillar":"WSC","options":["A. ...","B. ...","C. ...","D. ..."],"correct":"A","explanation":"..."}]`;
 
 let questions = [], answers = {}, currentQ = 0;
 let timerInterval = null, secondsLeft = 35 * 60;
 
 const PILLAR_TAG = {
-  WSC: '<span class="tag-pill tag-wsc">WSC Regulations</span>',
-  F2:  '<span class="tag-pill tag-f2">FIA F2 Regs</span>',
-  F1:  '<span class="tag-pill tag-f1">FIA F1 / ISC</span>'
+  WSC: '<span class="tag-pill tag-wsc">WSC General</span>',
+  F1:  '<span class="tag-pill tag-f1">F1 Division</span>',
+  F2:  '<span class="tag-pill tag-f2">F2 Division</span>'
 };
 
 async function startExam() {
@@ -732,10 +760,10 @@ async function startExam() {
   const steps = [
     'Initialising knowledge base...',
     'Loading WSC Unified Code v1.2...',
-    'Loading FIA F2 2025 Sporting Regs...',
-    'Loading FIA ISC principles...',
+    'Loading F1 Division parameters...',
+    'Loading F2 Division parameters...',
     'Generating question bank...',
-    'Applying anti-repeat filter...',
+    'Applying division split...',
     'Calibrating difficulty distribution...',
     'Finalising examination...'
   ];
@@ -746,15 +774,14 @@ async function startExam() {
   }, 700);
 
   try {
-    const res = await fetch('https://wsctrlexamportal.amwade537.workers.dev/'
-, {
+    const res = await fetch('https://wsctrlexamportal.amwade537.workers.dev/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 12000,
         system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: 'Generate the 30-question WSC Stewards Certification Exam now. Return only the JSON array.' }]
+        messages: [{ role: 'user', content: 'Generate the 30-question WSC Stewards Certification Exam now. Ensure exactly 10 WSC, 10 F1, and 10 F2 questions. Return only the JSON array.' }]
       })
     });
 
@@ -765,7 +792,6 @@ async function startExam() {
     let raw = data.content.map(b => b.text || '').join('');
     raw = raw.replace(/```json[\s\S]*?```|```/g, '').trim();
 
-    // Find JSON array
     const start = raw.indexOf('[');
     const end = raw.lastIndexOf(']');
     if (start === -1 || end === -1 || end <= start) throw new Error('No valid JSON array found — please retry');
@@ -786,13 +812,10 @@ async function startExam() {
     showScreen('screenExam');
 
   } catch(err) {
-    console.error('Full error:', err);
-    console.error('Raw response:', typeof raw !== 'undefined' ? raw.substring(0, 500) : 'no raw');
     clearInterval(iv);
     showScreen('screenIntro');
     document.getElementById('btnStart').disabled = false;
-    const existing = document.querySelector('.err-box');
-    if (existing) existing.remove();
+    document.querySelectorAll('.err-box').forEach(e => e.remove());
     document.querySelector('.intro-wrap').insertAdjacentHTML('beforeend',
       `<div class="err-box"><strong>EXAM GENERATION FAILED</strong>${err.message ? err.message : JSON.stringify(err)}<br><button class="btn-retry" onclick="startExam()">RETRY</button></div>`
     );
@@ -818,8 +841,7 @@ function updateDots() {
     if (i === currentQ) d.classList.add('active');
     else if (answers[i] !== undefined) d.classList.add('done');
   });
-  const answered = Object.keys(answers).length;
-  document.getElementById('progFill').style.width = `${(answered / questions.length) * 100}%`;
+  document.getElementById('progFill').style.width = `${(Object.keys(answers).length / questions.length) * 100}%`;
 }
 
 function renderQ() {
@@ -845,16 +867,8 @@ function renderQ() {
   updateDots();
 }
 
-function pick(letter) {
-  answers[currentQ] = letter;
-  renderQ();
-}
-
-function go(dir) {
-  currentQ = Math.max(0, Math.min(questions.length - 1, currentQ + dir));
-  renderQ();
-}
-
+function pick(letter) { answers[currentQ] = letter; renderQ(); }
+function go(dir) { currentQ = Math.max(0, Math.min(questions.length - 1, currentQ + dir)); renderQ(); }
 function confirmSubmit() {
   const unanswered = questions.length - Object.keys(answers).length;
   if (unanswered > 0 && !confirm(`${unanswered} question(s) unanswered. Submit anyway?`)) return;
@@ -864,27 +878,94 @@ function confirmSubmit() {
 function submitExam() {
   clearInterval(timerInterval);
   let correct = 0, wrong = 0, skipped = 0;
+  let wscCorrect = 0, wscTotal = 0;
+  let f1Correct = 0, f1Total = 0;
+  let f2Correct = 0, f2Total = 0;
   const items = [];
 
   questions.forEach((q, i) => {
     const ua = answers[i];
-    if (!ua) { skipped++; items.push({ q, ua, status: 'skipped', i }); }
-    else if (ua === q.correct) { correct++; items.push({ q, ua, status: 'correct', i }); }
-    else { wrong++; items.push({ q, ua, status: 'incorrect', i }); }
+    const pillar = q.pillar;
+
+    if (pillar === 'WSC') wscTotal++;
+    else if (pillar === 'F1') f1Total++;
+    else if (pillar === 'F2') f2Total++;
+
+    if (!ua) {
+      skipped++;
+      items.push({ q, ua, status: 'skipped', i });
+    } else if (ua === q.correct) {
+      correct++;
+      items.push({ q, ua, status: 'correct', i });
+      if (pillar === 'WSC') wscCorrect++;
+      else if (pillar === 'F1') f1Correct++;
+      else if (pillar === 'F2') f2Correct++;
+    } else {
+      wrong++;
+      items.push({ q, ua, status: 'incorrect', i });
+    }
   });
 
   const pct = Math.round((correct / questions.length) * 100);
   const passed = pct >= 90;
-  const distinction = pct >= 95;
 
-  document.getElementById('rVerdict').textContent = passed ? 'CERTIFIED' : 'FAILED';
+  // Determine tier
+  let tier = null, tierClass = '';
+  if (pct >= 98) { tier = 'Chief Steward'; tierClass = 'chief'; }
+  else if (pct >= 95) { tier = 'Senior Steward'; tierClass = 'senior'; }
+  else if (pct >= 90) { tier = 'Junior Steward'; tierClass = 'junior'; }
+
+  // Determine division classification
+  const f1Pct = f1Total > 0 ? f1Correct / f1Total : 0;
+  const f2Pct = f2Total > 0 ? f2Correct / f2Total : 0;
+  let divClass = '', divHTML = '';
+
+  if (passed) {
+    if (f1Pct > f2Pct) {
+      divClass = 'f1';
+      divHTML = `<strong>✦ F1 DIVISION CLASSIFICATION</strong><span>You scored stronger in F1-specific questions (${Math.round(f1Pct*100)}% F1 vs ${Math.round(f2Pct*100)}% F2). You are certified as a ${tier} — F1 Division.</span>`;
+    } else if (f2Pct > f1Pct) {
+      divClass = 'f2';
+      divHTML = `<strong>✦ F2 DIVISION CLASSIFICATION</strong><span>You scored stronger in F2-specific questions (${Math.round(f2Pct*100)}% F2 vs ${Math.round(f1Pct*100)}% F1). You are certified as a ${tier} — F2 Division.</span>`;
+    } else {
+      divClass = 'both';
+      divHTML = `<strong>✦ DUAL DIVISION CLASSIFICATION</strong><span>You scored equally across F1 and F2 questions (${Math.round(f1Pct*100)}% each). You are certified as a ${tier} — Both Divisions.</span>`;
+    }
+  }
+
+  document.getElementById('rVerdict').textContent = passed ? (tier || 'CERTIFIED') : 'FAILED';
   document.getElementById('rVerdict').className = `result-verdict ${passed ? 'pass' : 'fail'}`;
+
+  const tierEl = document.getElementById('rTier');
+  if (passed && tier) {
+    tierEl.textContent = tier;
+    tierEl.className = `result-tier ${tierClass}`;
+    tierEl.style.display = 'block';
+  } else {
+    tierEl.style.display = 'none';
+  }
+
   document.getElementById('rPct').textContent = `${pct}%`;
   document.getElementById('rPct').className = `result-pct ${passed ? 'pass' : 'fail'}`;
+  document.getElementById('rSub').textContent = passed ? `${correct} of ${questions.length} correct` : 'Below 90% — full retake required';
+
+  const divBanner = document.getElementById('rDivision');
+  if (passed) {
+    divBanner.className = `division-banner ${divClass}`;
+    divBanner.innerHTML = divHTML;
+    divBanner.style.display = 'block';
+  } else {
+    divBanner.style.display = 'none';
+  }
+
+  document.getElementById('bWSC').textContent = `${wscCorrect}/${wscTotal}`;
+  document.getElementById('bF1').textContent = `${f1Correct}/${f1Total}`;
+  document.getElementById('bF2').textContent = `${f2Correct}/${f2Total}`;
+
   document.getElementById('rCorrect').textContent = correct;
   document.getElementById('rWrong').textContent = wrong;
   document.getElementById('rSkipped').textContent = skipped;
-  document.getElementById('trlInvite').style.display = distinction ? 'block' : 'none';
+  document.getElementById('trlInvite').style.display = pct >= 98 ? 'block' : 'none';
 
   const wrap = document.getElementById('reviewWrap');
   wrap.innerHTML = '';
