@@ -286,8 +286,8 @@ async function startExam(){
   const iv=setInterval(()=>{if(si<steps.length)document.getElementById('loadStatus').textContent=steps[si++];},800);
   try{
         const res=await fetch('https://wsctrlexamportal.amwade537.workers.dev/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:16000,system:SYSTEM_PROMPT,messages:[{role:'user',content:'Generate the 50-question WSC F1 Driver Exam now. Return only the JSON array.'}]})});
+    clearInterval(iv);
 
-        clearInterval(iv);
     if(!res.ok){
 {const errText=await res.text();throw new Error('API error '+res.status+': '+errText.substring(0,200));}
     const data=await res.json();
