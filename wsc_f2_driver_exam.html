@@ -27,8 +27,6 @@
   .prog-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width 0.4s ease;box-shadow:0 0 6px var(--gold-glow);}
   .container{max-width:800px;margin:0 auto;padding:36px 20px 80px;}
   .screen{display:none;}.screen.active{display:block;}
-
-  /* INTRO */
   .intro-wrap{text-align:center;padding:50px 16px 36px;}
   .intro-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
   .intro-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(46px,8vw,82px);letter-spacing:5px;line-height:0.88;color:var(--text);margin-bottom:6px;}
@@ -53,16 +51,12 @@
   .btn-start{display:block;width:100%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#080808;border:none;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:5px;padding:18px;cursor:pointer;transition:all 0.2s;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));}
   .btn-start:hover{filter:brightness(1.1);transform:translateY(-1px);}
   .btn-start:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;transform:none;filter:none;}
-
-  /* LOADING */
   .load-wrap{text-align:center;padding:110px 20px;}
   .load-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:28px;}
   .load-bar-outer{width:280px;height:2px;background:var(--border);margin:0 auto 28px;overflow:hidden;}
   .load-bar-inner{height:100%;background:var(--gold);animation:sweep 1.8s ease-in-out infinite;box-shadow:0 0 8px var(--gold-glow);}
   @keyframes sweep{0%{width:0;margin-left:0}50%{width:100%;margin-left:0}100%{width:0;margin-left:100%}}
   .load-status{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold);min-height:20px;}
-
-  /* EXAM */
   .exam-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);}
   .q-counter{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
   .q-counter strong{color:var(--text);font-size:15px;}
@@ -85,8 +79,6 @@
   .btn-nav:disabled{opacity:0.25;cursor:not-allowed;}
   .btn-submit{background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none;color:#080808;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;padding:11px 28px;cursor:pointer;transition:all 0.16s;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));}
   .btn-submit:hover{filter:brightness(1.1);}
-
-  /* RESULTS */
   .result-hero{text-align:center;padding:44px 16px 36px;}
   .result-verdict{font-family:'Bebas Neue',sans-serif;font-size:64px;letter-spacing:6px;margin-bottom:6px;line-height:1;}
   .result-verdict.full{color:var(--green);text-shadow:0 0 40px rgba(0,200,83,0.22);}
@@ -221,9 +213,9 @@
 </div>
 
 <script>
-const DIVISION = 'F1';
+const DIVISION = 'F2';
 const RULING_DEADLINE = '4 hours after the F2 race ends';
-const SYSTEM_PROMPT = `You are the WSC (World Series Championship) Driver Licensing Examiner for the F2 Division. Generate exactly 50 multiple-choice questions testing an F1 driver's knowledge of WSC rules and standards.
+const SYSTEM_PROMPT = `You are the WSC (World Series Championship) Driver Licensing Examiner for the F2 Division. Generate exactly 50 multiple-choice questions testing an F2 driver's knowledge of WSC rules and standards.
 
 SOURCE: WSC rules only. No IRL FIA regs. No TRL rules.
 
@@ -271,7 +263,7 @@ QUESTION RULES:
 - No hints in question text. No correct answer markers.
 - Difficulty: 35% easy, 45% moderate, 20% hard edge cases
 - No two questions test the same specific fact
-- Frame scenarios in F2 Division context where appropriate (e.g. F1 race, Saturday race, 90-minute ruling window)
+- Frame scenarios in F2 Division context where appropriate (e.g. F2 race, Sunday race, 4-hour ruling window)
 
 Return ONLY valid JSON array, no markdown, no preamble:
 [{"q":"...","options":["A. ...","B. ...","C. ...","D. ..."],"correct":"A","explanation":"..."}]`;
@@ -285,8 +277,7 @@ async function startExam(){
   let si=0;
   const iv=setInterval(()=>{if(si<steps.length)document.getElementById('loadStatus').textContent=steps[si++];},800);
   try{
-    const res=await fetch('https://wsctrlexamportal.amwade537.workers.dev/'
-,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens: 16000,system:SYSTEM_PROMPT,messages:[{role:'user',content:'Generate the 50-question WSC F2 Driver Exam now. Return only the JSON array.'}]})});
+    const res=await fetch('https://wsctrlexamportal.amwade537.workers.dev/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:16000,system:SYSTEM_PROMPT,messages:[{role:'user',content:'Generate the 50-question WSC F2 Driver Exam now. Return only the JSON array.'}]})});
     clearInterval(iv);
     if(!res.ok){const errText=await res.text();throw new Error('API error '+res.status+': '+errText.substring(0,200));}
     const data=await res.json();
@@ -325,7 +316,7 @@ function submitExam(){
   questions.forEach((q,i)=>{const ua=answers[i];if(!ua){skipped++;items.push({q,ua,status:'skipped',i});}else if(ua===q.correct){correct++;items.push({q,ua,status:'correct',i});}else{wrong++;items.push({q,ua,status:'incorrect',i});}});
   const pct=Math.round((correct/questions.length)*100);
   let tier,verdictText,statusText,bannerHTML;
-  if(pct>=95){tier='full';verdictText='LICENCED';statusText='FULL PASS — WSC F2 DRIVER LICENCE GRANTED';bannerHTML=`<strong>✓ WSC F2 DRIVER LICENCE ISSUED</strong><br><span>Score: ${correct}/50 (${pct}%). Full mastery of WSC F1 rules confirmed. Your licence is active. Welcome to the F2 grid.</span>`;}
+  if(pct>=95){tier='full';verdictText='LICENCED';statusText='FULL PASS — WSC F2 DRIVER LICENCE GRANTED';bannerHTML=`<strong>✓ WSC F2 DRIVER LICENCE ISSUED</strong><br><span>Score: ${correct}/50 (${pct}%). Full mastery of WSC F2 rules confirmed. Your licence is active. Welcome to the F2 grid.</span>`;}
   else if(pct>=90){tier='prov';verdictText='PROVISIONAL';statusText='PROVISIONAL PASS — PENDING STAFF REVIEW';bannerHTML=`<strong>◐ PROVISIONAL F2 LICENCE ISSUED</strong><br><span>Score: ${correct}/50 (${pct}%). Provisional threshold met. Conditional licence issued — subject to WSC staff review. Score 95%+ on next attempt for full licence.</span>`;}
   else{tier='fail';verdictText='FAILED';statusText='FAIL — LICENCE DENIED';bannerHTML=`<strong>✗ LICENCE DENIED</strong><br><span>Score: ${correct}/50 (${pct}%). Minimum provisional threshold is 90% (45/50). Study the WSC Unified Code and retake the full exam. Your seat is earned, not given.</span>`;}
   document.getElementById('rVerdict').textContent=verdictText;document.getElementById('rVerdict').className=`result-verdict ${tier}`;
