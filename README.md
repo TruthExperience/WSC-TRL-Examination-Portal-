@@ -10,7 +10,6 @@ Official certification examinations for the World Series Championship (WSC) and 
 |------|--------|-----------|------|----------------|
 | [WSC F1 Driver Rules & Standards](./wsc_f1_driver_exam.html) | WSC | 50 | 30 min | 95% Full / 90% Provisional |
 | [WSC F2 Driver Rules & Standards](./wsc_f2_driver_exam.html) | WSC | 50 | 30 min | 95% Full / 90% Provisional |
-| [WSC Driver Rules & Standards](./wsc_driver_exam.html) | WSC | 50 | 30 min | 95% Full / 90% Provisional |
 | [WSC Stewards Certification](./wsc_stewards_exam.html) | WSC | 30 | 35 min | 90% |
 | [TRL Stewards Certification](./trl_stewards_exam.html) | TRL | 30 | 45 min | 95% |
 
