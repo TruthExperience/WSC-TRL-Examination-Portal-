@@ -1,340 +1,504 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WSC F1 Driver Rules & Standards Exam</title>
+<title>WSC Driver Rules & Standards — Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,700;0,800;1,600&family=Barlow:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;700&display=swap');
-  :root {
-    --gold:#C9A84C;--gold-dark:#9B7A2A;--gold-glow:rgba(201,168,76,0.15);
-    --black:#060608;--surface:#0E0E12;--border:#2A2A35;--text:#E8E8F0;--muted:#6B6B80;
-    --green:#00C853;--red:#CC0000;--amber:#FFB300;--div-color:#E8E8F0;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--black);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:1000;}
-  .header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-  .header-left{display:flex;align-items:center;gap:14px;}
-  .wsc-badge{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#080808;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;padding:6px 14px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
-  .div-pill{background:rgba(232,232,240,0.08);border:1px solid rgba(232,232,240,0.2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;padding:4px 12px;text-transform:uppercase;}
-  .header-title{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
-  .timer-display{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;color:var(--gold);letter-spacing:3px;text-shadow:0 0 16px var(--gold-glow);transition:color 0.5s;}
-  .timer-display.warning{color:var(--amber);}
-  .timer-display.critical{color:var(--red);animation:blink 1s infinite;}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-  .prog-wrap{height:2px;background:var(--border);}
-  .prog-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width 0.4s ease;box-shadow:0 0 6px var(--gold-glow);}
-  .container{max-width:800px;margin:0 auto;padding:36px 20px 80px;}
-  .screen{display:none;}.screen.active{display:block;}
-  .intro-wrap{text-align:center;padding:50px 16px 36px;}
-  .intro-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
-  .intro-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(46px,8vw,82px);letter-spacing:5px;line-height:0.88;color:var(--text);margin-bottom:6px;}
-  .intro-title span{color:var(--gold);}
-  .intro-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:40px;}
-  .spec-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:24px;}
-  .spec-cell{background:var(--surface);padding:20px 12px;text-align:center;}
-  .spec-val{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--gold);letter-spacing:2px;line-height:1;}
-  .spec-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:5px;}
-  .outcome-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:24px;}
-  .outcome-cell{background:var(--surface);padding:16px 14px;text-align:center;border-top:2px solid transparent;}
-  .outcome-cell.full{border-top-color:var(--green);}.outcome-cell.prov{border-top-color:var(--amber);}.outcome-cell.fail{border-top-color:var(--red);}
-  .outcome-val{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;margin-bottom:4px;}
-  .outcome-cell.full .outcome-val{color:var(--green);}.outcome-cell.prov .outcome-val{color:var(--amber);}.outcome-cell.fail .outcome-val{color:var(--red);}
-  .outcome-desc{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);line-height:1.6;}
-  .topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:24px;}
-  .topic-cell{background:var(--surface);padding:13px 15px;border-left:2px solid var(--gold);}
-  .topic-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--gold);margin-bottom:4px;}
-  .topic-items{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;line-height:1.7;}
-  .mandate-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:16px 20px;margin-bottom:24px;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.9;color:var(--muted);text-align:left;}
-  .mandate-box strong{color:var(--text);}
-  .btn-start{display:block;width:100%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#080808;border:none;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:5px;padding:18px;cursor:pointer;transition:all 0.2s;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));}
-  .btn-start:hover{filter:brightness(1.1);transform:translateY(-1px);}
-  .btn-start:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;transform:none;filter:none;}
-  .load-wrap{text-align:center;padding:110px 20px;}
-  .load-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:28px;}
-  .load-bar-outer{width:280px;height:2px;background:var(--border);margin:0 auto 28px;overflow:hidden;}
-  .load-bar-inner{height:100%;background:var(--gold);animation:sweep 1.8s ease-in-out infinite;box-shadow:0 0 8px var(--gold-glow);}
-  @keyframes sweep{0%{width:0;margin-left:0}50%{width:100%;margin-left:0}100%{width:0;margin-left:100%}}
-  .load-status{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold);min-height:20px;}
-  .exam-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);}
-  .q-counter{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-  .q-counter strong{color:var(--text);font-size:15px;}
-  .q-dots{display:flex;gap:4px;flex-wrap:wrap;max-width:420px;justify-content:flex-end;}
-  .q-dot{width:6px;height:6px;background:var(--border);transition:background 0.2s;}
-  .q-dot.done{background:var(--gold);}.q-dot.active{background:var(--text);}
-  .q-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:26px;margin-bottom:16px;}
-  .q-num{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
-  .q-text{font-size:15px;line-height:1.65;color:var(--text);}
-  .options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
-  .opt{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:13px 16px;text-align:left;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;line-height:1.5;transition:all 0.12s;display:flex;gap:12px;align-items:flex-start;}
-  .opt:hover:not(:disabled){border-color:var(--gold);background:var(--gold-glow);}
-  .opt.selected{border-color:var(--gold);background:var(--gold-glow);}
-  .opt:disabled{cursor:default;}
-  .opt-letter{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:var(--muted);min-width:18px;margin-top:2px;transition:color 0.12s;}
-  .opt.selected .opt-letter{color:var(--gold);}
-  .nav-row{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-  .btn-nav{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;padding:11px 22px;cursor:pointer;transition:all 0.16s;text-transform:uppercase;}
-  .btn-nav:hover:not(:disabled){border-color:var(--text);color:var(--text);}
-  .btn-nav:disabled{opacity:0.25;cursor:not-allowed;}
-  .btn-submit{background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none;color:#080808;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;padding:11px 28px;cursor:pointer;transition:all 0.16s;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));}
-  .btn-submit:hover{filter:brightness(1.1);}
-  .result-hero{text-align:center;padding:44px 16px 36px;}
-  .result-verdict{font-family:'Bebas Neue',sans-serif;font-size:64px;letter-spacing:6px;margin-bottom:6px;line-height:1;}
-  .result-verdict.full{color:var(--green);text-shadow:0 0 40px rgba(0,200,83,0.22);}
-  .result-verdict.prov{color:var(--amber);text-shadow:0 0 40px rgba(255,179,0,0.22);}
-  .result-verdict.fail{color:var(--red);text-shadow:0 0 40px rgba(204,0,0,0.22);}
-  .result-status{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
-  .result-status.full{color:var(--green);}.result-status.prov{color:var(--amber);}.result-status.fail{color:var(--red);}
-  .result-pct{font-family:'IBM Plex Mono',monospace;font-size:46px;font-weight:700;margin-bottom:5px;}
-  .result-pct.full{color:var(--green);}.result-pct.prov{color:var(--amber);}.result-pct.fail{color:var(--red);}
-  .result-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:28px;}
-  .outcome-banner{border:1px solid var(--border);border-left:3px solid var(--border);padding:16px 20px;margin-bottom:28px;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.8;text-align:left;}
-  .outcome-banner.full{border-color:var(--green);border-left-color:var(--green);background:rgba(0,200,83,0.05);color:var(--green);}
-  .outcome-banner.prov{border-color:var(--amber);border-left-color:var(--amber);background:rgba(255,179,0,0.05);color:var(--amber);}
-  .outcome-banner.fail{border-color:var(--red);border-left-color:var(--red);background:rgba(204,0,0,0.05);color:var(--red);}
-  .outcome-banner span{color:var(--muted);}
-  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:28px;}
-  .stat-cell{background:var(--surface);padding:18px;text-align:center;}
-  .stat-val{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:700;margin-bottom:4px;}
-  .stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-  .btn-retake{display:block;width:100%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#080808;border:none;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;padding:16px;cursor:pointer;transition:all 0.2s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
-  .btn-retake:hover{filter:brightness(1.1);}
-  .review-section{margin-top:40px;}
-  .review-hdr{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:16px;}
-  .rv-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--border);padding:16px 20px;margin-bottom:8px;}
-  .rv-item.correct{border-left-color:var(--green);}.rv-item.incorrect{border-left-color:var(--red);}.rv-item.skipped{border-left-color:var(--amber);}
-  .rv-q{font-size:13px;line-height:1.55;color:var(--text);margin-bottom:8px;}
-  .rv-tags{display:flex;gap:7px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:10px;margin-bottom:7px;}
-  .tag{padding:3px 9px;}
-  .tag-ok{background:rgba(0,200,83,0.1);color:var(--green);border:1px solid rgba(0,200,83,0.22);}
-  .tag-bad{background:rgba(204,0,0,0.1);color:#ff6b6b;border:1px solid rgba(204,0,0,0.22);}
-  .tag-skip{background:rgba(255,179,0,0.08);color:var(--amber);border:1px solid rgba(255,179,0,0.22);}
-  .rv-exp{font-size:12px;color:var(--muted);line-height:1.6;padding-top:8px;border-top:1px solid var(--border);}
-  .err-box{background:var(--surface);border:1px solid var(--red);padding:22px;text-align:center;margin:28px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);}
-  .err-box strong{color:var(--red);display:block;margin-bottom:8px;font-size:15px;}
-  .btn-retry{margin-top:12px;background:transparent;border:1px solid var(--red);color:var(--red);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;padding:9px 22px;cursor:pointer;transition:all 0.16s;text-transform:uppercase;}
-  .btn-retry:hover{background:rgba(204,0,0,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090b;--surface:#111116;--surface2:#17171d;--surface3:#1e1e26;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
+  --gold:#C8A84B;--gold-dim:rgba(200,168,75,0.12);
+  --white:#EAEAEE;--muted:rgba(234,234,238,0.42);
+  --green:#4DC98A;--red:#E05555;--blue:#5299E0;
+  --ff-d:'Barlow Condensed',sans-serif;--ff-b:'Barlow',sans-serif;--ff-m:'Share Tech Mono',monospace;
+}
+body{background:var(--bg);color:var(--white);font-family:var(--ff-b);min-height:100vh;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--surface)}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(200,168,75,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,75,0.02) 1px,transparent 1px);background-size:56px 56px}
+
+/* TOPBAR */
+.topbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(–border);background:rgba(9,9,11,0.92);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;flex-shrink:0}
+.tb-left{display:flex;align-items:center;gap:14px}
+.back{font-family:var(–ff-m);font-size:10px;letter-spacing:0.12em;color:var(–muted);background:none;border:1px solid var(–border);border-radius:3px;padding:5px 11px;cursor:pointer;transition:all 0.15s;text-decoration:none}
+.back:hover{color:var(–white);border-color:var(–border2)}
+.exam-name{font-family:var(–ff-d);font-weight:700;font-size:15px;letter-spacing:0.08em;text-transform:uppercase}
+.timer{font-family:var(–ff-m);font-size:22px;letter-spacing:0.08em;color:var(–gold);transition:color 0.3s}
+.timer.warn{color:var(–red);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.45}}
+
+.progress-bar{height:2px;background:var(–surface3);flex-shrink:0}
+.progress-fill{height:100%;background:var(–gold);transition:width 0.4s ease;width:0}
+
+/* SCREENS */
+.screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1}
+.screen.hidden{display:none}
+
+/* LOADING */
+.spin{width:52px;height:52px;border-radius:50%;border:2px solid var(–border2);border-top-color:var(–gold);animation:spin 0.8s linear infinite;margin-bottom:20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-t{font-family:var(–ff-m);font-size:12px;letter-spacing:0.22em;color:var(–muted);text-transform:uppercase;margin-bottom:8px}
+.load-s{font-size:11px;color:rgba(234,234,238,0.22);font-style:italic}
+
+/* EXAM */
+.exam-body{flex:1;display:flex;gap:28px;max-width:880px;width:100%;margin:0 auto;padding:36px 28px;position:relative;z-index:1}
+.q-col{flex:1;min-width:0}
+.q-num-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.q-num{font-family:var(–ff-m);font-size:10px;letter-spacing:0.14em;color:var(–gold);background:var(–gold-dim);padding:3px 9px;border-radius:2px;border:1px solid rgba(200,168,75,0.18)}
+.q-sec{font-family:var(–ff-m);font-size:9px;letter-spacing:0.2em;color:var(–muted);text-transform:uppercase}
+.q-text{font-size:16px;line-height:1.7;color:var(–white);margin-bottom:28px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:13px;padding:13px 16px;background:var(–surface2);border:1px solid var(–border);border-radius:4px;cursor:pointer;text-align:left;transition:all 0.14s;width:100%;font-family:var(–ff-b);font-size:13px;color:var(–white);line-height:1.55}
+.opt:hover:not(:disabled){border-color:var(–border2);background:var(–surface3)}
+.opt.sel{border-color:var(–gold);background:var(–gold-dim)}
+.opt.right{border-color:var(–green);background:rgba(77,201,138,0.1)}
+.opt.wrong{border-color:var(–red);background:rgba(224,85,85,0.1)}
+.opt:disabled{cursor:default}
+.opt-k{font-family:var(–ff-d);font-weight:700;font-size:14px;color:var(–gold);min-width:18px;flex-shrink:0}
+.nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:28px}
+.btn{font-family:var(–ff-d);font-weight:700;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:9px 18px;border-radius:3px;cursor:pointer;transition:all 0.14s;border:none}
+.btn-prev{background:var(–surface3);color:var(–muted);border:1px solid var(–border)}
+.btn-prev:hover{color:var(–white);border-color:var(–border2)}
+.btn-next{background:var(–gold);color:#09090b}
+.btn-next:hover{background:#D4B45A}
+.btn-submit{background:var(–green);color:#09090b}
+.btn-submit:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:0.35;cursor:not-allowed}
+
+/* SIDEBAR */
+.sidebar{width:188px;flex-shrink:0}
+.sb-lbl{font-family:var(–ff-m);font-size:9px;letter-spacing:0.2em;color:var(–muted);text-transform:uppercase;margin-bottom:10px}
+.q-map{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:20px}
+.qd{width:28px;height:28px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(–ff-m);font-size:9px;border:1px solid var(–border);background:var(–surface2);color:var(–muted);cursor:pointer;transition:all 0.1s}
+.qd.cur{border-color:var(–gold);background:var(–gold-dim);color:var(–gold)}
+.qd.ans{background:var(–surface3);border-color:var(–border2);color:var(–white)}
+.sb-stats{display:flex;flex-direction:column;gap:7px}
+.sr{display:flex;justify-content:space-between;font-size:11px;color:var(–muted)}
+.sr span:last-child{font-family:var(–ff-m);color:var(–white)}
+
+/* RESULTS */
+.results-body{max-width:860px;width:100%;margin:0 auto;padding:44px 28px;position:relative;z-index:1}
+.verdict-block{text-align:center;margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(–border)}
+.v-eye{font-family:var(–ff-m);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(–muted);margin-bottom:14px}
+.v-title{font-family:var(–ff-d);font-size:clamp(52px,9vw,88px);font-weight:800;text-transform:uppercase;line-height:0.88;margin-bottom:14px}
+.v-title.pass{color:var(–green)}.v-title.prov{color:var(–gold)}.v-title.fail{color:var(–red)}
+.v-score{font-family:var(–ff-d);font-size:68px;font-weight:800;line-height:1;margin-bottom:10px}
+.v-desc{font-size:13px;color:var(–muted);max-width:440px;margin:0 auto;line-height:1.75}
+
+.r-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px}
+.rs{background:var(–surface);border:1px solid var(–border);border-radius:4px;padding:18px;text-align:center}
+.rsv{font-family:var(–ff-d);font-size:34px;font-weight:800;margin-bottom:3px}
+.rsl{font-size:10px;color:var(–muted);letter-spacing:0.12em;text-transform:uppercase}
+
+/* Provisional banner */
+.prov-banner{background:rgba(200,168,75,0.08);border:1px solid var(–gold-dim);border-radius:4px;padding:18px;margin-bottom:24px}
+.prov-t{font-family:var(–ff-d);font-weight:700;font-size:16px;color:var(–gold);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+.prov-d{font-size:12px;color:var(–muted);line-height:1.65}
+
+/* Distinction banner */
+.dist-banner{background:linear-gradient(135deg,rgba(200,168,75,0.12),rgba(200,168,75,0.04));border:1px solid var(–gold);border-radius:5px;padding:20px;margin-bottom:24px}
+.dist-t{font-family:var(–ff-d);font-weight:800;font-size:17px;color:var(–gold);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+.dist-d{font-size:12px;color:var(–muted);line-height:1.7}
+
+/* Review */
+.rev-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.rev-title{font-family:var(–ff-d);font-weight:700;font-size:15px;letter-spacing:0.1em;text-transform:uppercase}
+.toggle-btn{font-family:var(–ff-m);font-size:10px;letter-spacing:0.1em;color:var(–muted);background:none;border:1px solid var(–border);border-radius:3px;padding:5px 11px;cursor:pointer}
+.toggle-btn:hover{border-color:var(–border2);color:var(–white)}
+.review-list{display:none}
+.review-list.open{display:block}
+.ri{background:var(–surface);border:1px solid var(–border);border-radius:4px;padding:18px;margin-bottom:10px}
+.ri.c{border-left:3px solid var(–green)}.ri.w{border-left:3px solid var(–red)}
+.ri-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ri-n{font-family:var(–ff-m);font-size:9px;color:var(–muted);letter-spacing:0.14em}
+.ri-tag{font-family:var(–ff-m);font-size:9px;letter-spacing:0.1em;padding:2px 7px;border-radius:2px;text-transform:uppercase}
+.ri-tag.c{background:rgba(77,201,138,0.12);color:var(–green)}
+.ri-tag.w{background:rgba(224,85,85,0.12);color:var(–red)}
+.ri-tag.s{background:rgba(234,234,238,0.07);color:var(–muted)}
+.ri-q{font-size:13px;margin-bottom:10px;line-height:1.6}
+.ri-ans{font-size:11px;color:var(–muted);margin-bottom:8px;line-height:1.6}
+.ri-ans span{color:var(–white)}
+.ri-exp{font-size:11px;color:var(–muted);padding:9px 11px;background:var(–surface3);border-radius:3px;line-height:1.65}
+.retake-btn{width:100%;padding:13px;margin-top:28px;background:var(–surface);border:1px solid var(–border);color:var(–white);border-radius:4px;font-family:var(–ff-d);font-weight:700;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.15s}
+.retake-btn:hover{border-color:var(–gold);color:var(–gold)}
+.error-box{background:rgba(224,85,85,0.08);border:1px solid rgba(224,85,85,0.25);border-radius:4px;padding:20px;margin:20px;font-size:13px;color:var(–red);line-height:1.7}
+
+@media(max-width:680px){
+.exam-body{flex-direction:column;padding:24px 16px}
+.sidebar{width:100%}
+.r-stats{grid-template-columns:repeat(2,1fr)}
+}
 </style>
+
 </head>
 <body>
-<div class="header">
-  <div class="header-left">
-    <div class="wsc-badge">WSC</div>
-    <div class="div-pill">F1 Division</div>
-    <div class="header-title">Driver Rules &amp; Standards Exam</div>
+<div class="bg-grid"></div>
+
+<div class="topbar">
+  <div class="tb-left">
+    <a href="index.html" class="back">← Portal</a>
+    <span class="exam-name" id="examName">WSC Driver Rules &amp; Standards</span>
   </div>
-  <div class="timer-display" id="timerDisplay">30:00</div>
+  <div class="timer" id="timer">30:00</div>
 </div>
-<div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
-<div class="container">
+<!-- LOADING -->
 
-  <div class="screen active" id="screenIntro">
-    <div class="intro-wrap">
-      <div class="intro-eyebrow">World Series Championship — F1 Division</div>
-      <div class="intro-title">DRIVER RULES &amp;<br><span>STANDARDS</span></div>
-      <div class="intro-sub">Official F1 Division Driver Licensing Examination</div>
-      <div class="spec-row">
-        <div class="spec-cell"><div class="spec-val">50</div><div class="spec-label">Questions</div></div>
-        <div class="spec-cell"><div class="spec-val">30</div><div class="spec-label">Minutes</div></div>
-        <div class="spec-cell"><div class="spec-val">95%</div><div class="spec-label">Full Pass</div></div>
-        <div class="spec-cell"><div class="spec-val">90%</div><div class="spec-label">Provisional</div></div>
-      </div>
-      <div class="outcome-grid">
-        <div class="outcome-cell full"><div class="outcome-val">FULL PASS — 95%+</div><div class="outcome-desc">48–50 correct<br>F1 Driver Licence granted<br>Full racing privileges</div></div>
-        <div class="outcome-cell prov"><div class="outcome-val">PROVISIONAL — 90–94%</div><div class="outcome-desc">45–47 correct<br>Conditional licence issued<br>Pending staff review</div></div>
-        <div class="outcome-cell fail"><div class="outcome-val">FAIL — BELOW 90%</div><div class="outcome-desc">44 or fewer correct<br>Licence denied<br>Must retake exam</div></div>
-      </div>
-      <div class="topic-grid">
-        <div class="topic-cell"><div class="topic-title">Administrative Rules</div><div class="topic-items">Final authority & document hierarchy<br>Evidence mandate & POV obligation<br>Saturday reporting: 12 hours<br>At Fault ruling for missing footage</div></div>
-        <div class="topic-cell"><div class="topic-title">PP Licence System</div><div class="topic-items">Tier 1–4 severity & PP bands<br>Thresholds: 6PP review / 10PP ban / 12PP<br>PP decay — 2PP per 3 clean races<br>Impact & behavioral modifiers</div></div>
-        <div class="topic-cell"><div class="topic-title">Racing & Overtaking</div><div class="topic-items">Axle Rule — inside & outside moves<br>Calculated Divebomb (0.3–0.5s gap)<br>3 conditions for a legal divebomb<br>100% attacker responsibility</div></div>
-        <div class="topic-cell"><div class="topic-title">Defending Standards</div><div class="topic-items">One defensive move on a straight<br>No reactive movement in braking zone<br>One car width when returning to line<br>Chicane corner priority rules</div></div>
-        <div class="topic-cell"><div class="topic-title">Track Limits & Zones</div><div class="topic-items">Strike system (1–2 warn / 3 B&W / 4+ +3s)<br>Safe rejoin — 100% driver responsibility<br>Pit entry/exit/light zone +1PP modifier<br>Lap 1 / Turn 1 scaling</div></div>
-        <div class="topic-cell"><div class="topic-title">Protests & F1 Procedures</div><div class="topic-items">40-Second Rule for appeals<br>Netcode mitigation — not a full defence<br>F1 ruling deadline: 90 minutes post-race<br>Ticket format, limits & cooldowns</div></div>
-      </div>
-      <div class="mandate-box">
-        <strong>EXAMINATION MANDATE — F1 DIVISION</strong><br>
-        No hints during the exam. Explanations revealed only after submission.<br>
-        <strong>Full Pass (95%+):</strong> WSC F1 Driver Licence granted immediately.<br>
-        <strong>Provisional (90–94%):</strong> Conditional licence — subject to staff review.<br>
-        <strong>Fail (below 90%):</strong> Licence denied. Full retake required.
-      </div>
-      <button class="btn-start" id="btnStart" onclick="startExam()">GENERATE F1 EXAM &amp; BEGIN</button>
-    </div>
-  </div>
+<div class="screen" id="screenLoad">
+  <div class="spin"></div>
+  <div class="load-t">Generating Examination</div>
+  <div class="load-s">Compiling WSC Rulebook — fresh questions every attempt</div>
+</div>
 
-  <div class="screen" id="screenLoading">
-    <div class="load-wrap">
-      <div class="load-label">Generating F1 Driver Examination</div>
-      <div class="load-bar-outer"><div class="load-bar-inner"></div></div>
-      <div class="load-status" id="loadStatus">Loading WSC Unified Code v1.2...</div>
-    </div>
-  </div>
+<!-- ERROR -->
 
-  <div class="screen" id="screenExam">
-    <div class="exam-header">
-      <div class="q-counter">Q <strong id="qNum">1</strong> / 50</div>
-      <div class="q-dots" id="qDots"></div>
-    </div>
-    <div class="q-card">
-      <div class="q-num" id="qLabel">Q01</div>
+<div class="screen hidden" id="screenError">
+  <div class="error-box" id="errorMsg"></div>
+</div>
+
+<!-- EXAM -->
+
+<div class="screen hidden" id="screenExam" style="flex-direction:row;align-items:flex-start;justify-content:flex-start">
+  <div class="exam-body">
+    <div class="q-col">
+      <div class="q-num-row">
+        <span class="q-num" id="qNum">Q01 / 50</span>
+        <span class="q-sec" id="qSec"></span>
+      </div>
       <div class="q-text" id="qText"></div>
-    </div>
-    <div class="options" id="optionsWrap"></div>
-    <div class="nav-row">
-      <button class="btn-nav" id="btnPrev" onclick="go(-1)">← PREV</button>
-      <button class="btn-submit" onclick="confirmSubmit()">SUBMIT EXAM</button>
-      <button class="btn-nav" id="btnNext" onclick="go(1)">NEXT →</button>
-    </div>
-  </div>
-
-  <div class="screen" id="screenResults">
-    <div class="result-hero">
-      <div class="result-verdict" id="rVerdict"></div>
-      <div class="result-status" id="rStatus"></div>
-      <div class="result-pct" id="rPct"></div>
-      <div class="result-sub" id="rSub"></div>
-      <div class="outcome-banner" id="rBanner"></div>
-      <div class="stat-row">
-        <div class="stat-cell"><div class="stat-val" id="rCorrect" style="color:var(--green)">0</div><div class="stat-lbl">Correct</div></div>
-        <div class="stat-cell"><div class="stat-val" id="rWrong" style="color:var(--red)">0</div><div class="stat-lbl">Incorrect</div></div>
-        <div class="stat-cell"><div class="stat-val" id="rSkipped" style="color:var(--amber)">0</div><div class="stat-lbl">Skipped</div></div>
+      <div class="opts" id="opts"></div>
+      <div class="nav-row">
+        <button class="btn btn-prev" id="btnPrev" onclick="nav(-1)">← Prev</button>
+        <button class="btn btn-next" id="btnNext" onclick="nav(1)">Next →</button>
       </div>
-      <button class="btn-retake" onclick="resetExam()">RETAKE EXAM</button>
     </div>
-    <div class="review-section">
-      <div class="review-hdr">Full Question Review — With Explanations</div>
-      <div id="reviewWrap"></div>
+    <div class="sidebar">
+      <div class="sb-lbl">Questions</div>
+      <div class="q-map" id="qMap"></div>
+      <div class="sb-stats">
+        <div class="sr"><span>Answered</span><span id="sbAns">0/50</span></div>
+        <div class="sr"><span>Remaining</span><span id="sbRem">50</span></div>
+        <div class="sr"><span>Time Left</span><span id="sbTime" style="color:var(--gold)">30:00</span></div>
+      </div>
     </div>
   </div>
+</div>
 
+<!-- RESULTS -->
+
+<div class="screen hidden" id="screenResults">
+  <div class="results-body" id="resultsBody"></div>
 </div>
 
 <script>
-const DIVISION = 'F1';
-const RULING_DEADLINE = '90 minutes after the F1 race ends';
-const SYSTEM_PROMPT = `You are the WSC (World Series Championship) Driver Licensing Examiner for the F1 Division. Generate exactly 50 multiple-choice questions testing an F1 driver's knowledge of WSC rules and standards.
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const EXAM = {
+  id: 'wsc_f1_driver',
+  title: 'WSC F1 Driver Rules & Standards',
+  league: 'WSC',
+  total: 50,
+  minutes: 30,
+  passThreshold: 0.95,
+  provisionalThreshold: 0.90,
+  hasProvisional: true,
+  rulebook: `WSC Unified Sporting & Racing Code v1.2 — F1 Division:
 
-SOURCE: WSC rules only. No IRL FIA regs. No TRL rules.
+THE AXLE RULE:
+- Inside moves: Attacker's front axle must be alongside defender's rear axle before the apex.
+- Outside moves: Attacker's front axle must be ahead at the apex.
+- Overlap established = racing room must be given. Contact without room = defender at fault.
+- No overlap = defender has full track width. Any contact = attacker at fault.
 
-DIVISION-SPECIFIC CONTEXT: This is the F1 Division exam. Where ruling deadlines are relevant, the F1 ruling deadline is 90 minutes after the race ends. F1 races are held at 3:00 PM UK on Saturdays and Sundays, so the Saturday reporting deadline for incident submissions is 12 hours post-race.
+CALCULATED DIVEBOMB (0.3s–0.5s):
+- Legal only if: gap 0.3–0.5s, axle rule met before apex, full car control, zero contact.
+- Attacker 100% responsible. Below 0.3s gap = illegal, minimum Tier 3.
 
-WSC UNIFIED CODE v1.2 — FULL CONTENT:
-Art 1.1: WSC Staff and Stewards hold final authority on all rule interpretations and session results.
-Art 1.2: Unified Code is the primary source of truth for drivers; supported internally by the Steward Operational Manual.
-Art 1.3: All drivers must record full sessions. Failure to provide POV footage upon request = automatic At Fault verdict.
-Art 1.4: Reporting deadlines — Saturday events 12 hours, Sunday events 24 hours.
+WSC F1 SPECIFIC RULES:
+- Game: F1 25, Realistic Performance settings, Fixed Setups for all drivers.
+- Assists: ABS and TC permitted at any level. Auto-steering and auto-braking PROHIBITED.
+- DRS: Available within 1.0s of car ahead after detection point. Not available lap 1 or under SC/VSC.
+- ERS: Unrestricted deployment during race. Harvesting is automatic.
+- Formation Lap: Must complete at racing pace. Incorrect grid position = pit lane start.
+- Safety Car: No overtaking. Delta time must be maintained. Failure = drive-through.
+- VSC: Reduce speed immediately to delta. Overtaking under VSC = 30s time penalty.
+- Qualifying Format: Q1 eliminates 16-20, Q2 eliminates 11-15, Q3 top 10 battle.
+- Impeding in Qualifying: Deliberately blocking a flying lap = minimum 3-place grid penalty.
+- Parc Fermé: Begins after Q2. No setup changes permitted. Breach = pit lane start.
+- Tyre Compounds: At least 2 different compounds in dry race. Failure = drive-through.
+- Pit Lane Speed: Speed limiter mandatory. Unsafe release = drive-through penalty.
+- Working on car before pit box = black flag.
+- Blue Flags: Yield to lapping car within 3 corners. Ignoring = 5s penalty.
+- Race Start: Lights-out procedure. Jump start detected = drive-through penalty.
+- Chequered Flag: Race concludes. Post-flag incidents generally not reviewed.
+
+DEFENSIVE STANDARDS:
+- One Move Rule: One defensive direction change on a straight.
+- No movement under braking: Reactive changes after braking phase begins prohibited.
+- Squeezing: Cannot squeeze car off-track once overlap is established.
+
+TRACK LIMITS:
+- Strike 1-2: Warning. Strike 3: Black & White Flag. Strike 4+: +3s per offence.
+- 40-Second Rule: Appeals against automated penalties require 40s uninterrupted POV footage.
+
+PIT LANE:
+- Pit Entry: Commit early. No sudden braking. No late cuts.
+- Pit Exit: Stay inside exit line. Yield to cars on track. Any zone violation = +1 PP modifier.
+
+INCIDENT REPORTING:
+- Saturday: file within 12 hours. Sunday: file within 24 hours.
+- Full unedited POV mandatory. Missing footage = automatic At Fault verdict.
 
 PP SYSTEM:
-Tier 1 Minor: 1–2 PP (Warning/+3s). Tier 2 Moderate: 3–4 PP (+5s). Tier 3 Major: 5–6 PP (+10s). Tier 4 Severe: 7–10 PP (+15s/DSQ).
-Thresholds: 6PP = Formal Licence Review. 10PP = Automatic One-Race Ban. 12PP = Multi-race ban or season disqualification.
-Decay: 2 PP removed for every 3 clean races. Points expire after 6 race weekends.
+- Tier 1: 1-2PP. Tier 2: 3-4PP. Tier 3: 5-6PP. Tier 4: 7-10PP.
+- 6PP = licence review. 10PP = race ban. 12PP = multi-race ban.
+- Decay: -2PP per 3 clean races. Expire after 6 completed weekends.
+- Modifiers: no position loss (-1PP), multi-car (+1PP), race-ending (+2PP), zone (+1PP).
 
-RULES OF ENGAGEMENT:
-Axle Rule — Inside: front axle alongside defender's rear axle before apex. Outside: attacker ahead at apex.
-Calculated Divebomb (0.3s–0.5s gap): Legal only if (1) Axle Rule met before apex, (2) total car control — no bowing/sliding, (3) zero contact. Attacker carries 100% responsibility. Forcing evasive action = punishable offense.
-Defensive Standards: One defensive move permitted on a straight. No reactive movement once braking phase has begun. Returning to racing line requires one car width of space.
-Chicanes: Each corner judged independently; priority usually determined by first corner.
+PASSING STANDARDS:
+- Full Pass: 95%+. Provisional: 90-94% (staff review). Fail: below 90%.`
+};
+// ── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => { document.getElementById('examName').textContent = EXAM.title; generate(); });
 
-TRACK LIMITS & ZONES:
-Strike System: Strike 1–2 = Warning. Strike 3 = Black & White flag. Strike 4+ = +3s per offense.
-Safe Rejoins: Driver 100% responsible. Forcing others to brake or change line = minimum +5s penalty.
-Zone Modifiers +1PP: Pit Entry (late cuts, sudden braking, crossing entry line), Pit Exit (early line crossing, unsafe merges, impeding), Pit Exit Light Zone (sudden braking causing avoidance), Lap 1/Turn 1 (accordion/compression = reduced scaling; reckless divebombs/high-speed contact = increased scaling).
-
-APPEALS & PROTESTS:
-40-Second Rule: Must include 40 seconds uninterrupted POV footage prior to incident.
-Netcode: May be mitigating factor but does NOT fully exonerate. Intentional exploitation = major offense.
-
-STEWARD OPERATIONAL MANUAL:
-POV Mandate: Full unedited footage required. Ticket format: Lap Number, Session Type, Drivers Involved, 3–4 sentence neutral overview.
-Impact Modifiers: No Position Loss (−1PP), Multi-car (+1PP), Race-ending Contact (+2PP).
-Behavioral Modifiers: First Offense (baseline), Repeat (+1PP), Pattern (+2PP).
-Workflow: (1) Review POV, (2) Identify Category, (3) Apply Calculator, (4) Assign and Document.
-
-DRAFT PROPOSAL STANDARDS:
-Max 3 incident tickets per team per race. One incident per ticket. 10-minute post-race cooldown. 5-minute cooldown between team submissions. Authorized submitters: TP or registered SD/PO only. Racing TP Protocol: SD becomes primary submitter if TP is racing. F1 ruling deadline: 90 minutes post-race. Appeals: new evidence, procedural error, or misapplication only. Appeal deadline: 24 hours of ruling publication.
-
-QUESTION RULES:
-- 50 questions, 4 options each (A B C D)
-- Cover all sections proportionally
-- Wrong answers must be plausible — off-by-one errors, reversed rules, common misconceptions
-- No hints in question text. No correct answer markers.
-- Difficulty: 35% easy, 45% moderate, 20% hard edge cases
-- No two questions test the same specific fact
-- Frame scenarios in F1 Division context where appropriate (e.g. F1 race, Saturday race, 90-minute ruling window)
-
-Return ONLY valid JSON array, no markdown, no preamble:
-[{"q":"...","options":["A. ...","B. ...","C. ...","D. ..."],"correct":"A","explanation":"..."}]`;
-
-let questions=[],answers={},currentQ=0,timerInterval=null,secondsLeft=30*60;
-
-async function startExam(){
-  document.getElementById('btnStart').disabled=true;
-  showScreen('screenLoading');
-  const steps=['Loading WSC Unified Code v1.2...','Loading Steward Operational Manual...','Loading F1 Division parameters...','Compiling question set...','Generating 50 questions...','Applying difficulty distribution...','Checking for duplicates...','Finalising F1 examination...'];
-  let si=0;
-  const iv=setInterval(()=>{if(si<steps.length)document.getElementById('loadStatus').textContent=steps[si++];},800);
-  try{
-    const res=await fetch('https://wsctrlexamportal.amwade537.workers.dev/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:16000,system:SYSTEM_PROMPT,messages:[{role:'user',content:'Generate the 50-question WSC F1 Driver Exam now. Return only the JSON array.'}]})});
-    clearInterval(iv);
-    if(!res.ok){const errText=await res.text();throw new Error('API error '+res.status+': '+errText.substring(0,200));}
-    const data=await res.json();
-    if(data.error){throw new Error('API returned error: '+JSON.stringify(data.error));}
-    let raw=data.content.map(b=>b.text||'').join('');
-    raw=raw.replace(/```json[\s\S]*?```|```/g,'').trim();
-    const s=raw.indexOf('['),e=raw.lastIndexOf(']');
-    if(s===-1||e===-1||e<=s)throw new Error('No valid JSON array found — please retry');
-    let jsonStr=raw.slice(s,e+1);
-    jsonStr=jsonStr.replace(/,(\s*[}\]])/g,'$1');
-    const parsed=JSON.parse(jsonStr);
-    if(!Array.isArray(parsed)||parsed.length<40)throw new Error('Insufficient questions — please retry');
-    questions=parsed.slice(0,50);answers={};currentQ=0;secondsLeft=30*60;
-    buildDots();renderQ();startTimer();showScreen('screenExam');
-  }catch(err){
-    clearInterval(iv);showScreen('screenIntro');
-    document.getElementById('btnStart').disabled=false;
-    document.querySelectorAll('.err-box').forEach(e=>e.remove());
-    document.querySelector('.intro-wrap').insertAdjacentHTML('beforeend',`<div class="err-box"><strong>EXAM GENERATION FAILED</strong>${err.message ? err.message : JSON.stringify(err)}<br><button class="btn-retry" onclick="startExam()">RETRY</button></div>`);
+async function generate() {
+  show('screenLoad');
+  try {
+    const qs = await fetchQuestions();
+    questions = shuffle(qs);
+    renderExam();
+    startTimer();
+    show('screenExam');
+  } catch(e) {
+    document.getElementById('errorMsg').innerHTML = `<strong>Exam Generation Failed</strong><br><br>${e.message}<br><br>This exam requires an active internet connection. Please check your connection and try again.<br><br><a href="index.html" style="color:var(--gold)">← Return to Portal</a>`;
+    show('screenError');
   }
 }
 
-function buildDots(){const w=document.getElementById('qDots');w.innerHTML='';questions.forEach((_,i)=>{const d=document.createElement('div');d.className='q-dot';d.id=`dot-${i}`;w.appendChild(d);});}
+async function fetchQuestions() {
+  const prompt = `You are generating a ${EXAM.total}-question certification exam: "${EXAM.title}" for the ${EXAM.league}.
 
-function updateDots(){questions.forEach((_,i)=>{const d=document.getElementById(`dot-${i}`);if(!d)return;d.className='q-dot';if(i===currentQ)d.classList.add('active');else if(answers[i]!==undefined)d.classList.add('done');});document.getElementById('progFill').style.width=`${(Object.keys(answers).length/questions.length)*100}%`;}
+RULEBOOK:
+${EXAM.rulebook}
 
-function renderQ(){const q=questions[currentQ];document.getElementById('qNum').textContent=currentQ+1;document.getElementById('qLabel').textContent=`Q${String(currentQ+1).padStart(2,'0')}`;document.getElementById('qText').textContent=q.q;const w=document.getElementById('optionsWrap');w.innerHTML='';q.options.forEach((opt,i)=>{const l=['A','B','C','D'][i];const b=document.createElement('button');b.className='opt'+(answers[currentQ]===l?' selected':'');b.innerHTML=`<span class="opt-letter">${l}</span><span>${opt.replace(/^[A-D]\.\s*/,'')}</span>`;b.onclick=()=>pick(l);w.appendChild(b);});document.getElementById('btnPrev').disabled=currentQ===0;document.getElementById('btnNext').disabled=currentQ===questions.length-1;updateDots();}
+INSTRUCTIONS:
+- Generate exactly ${EXAM.total} questions.
+- Mix: ~30% rule recall, ~40% scenario application, ~30% edge cases and threshold knowledge.
+- Each question: 4 options (A/B/C/D), one clearly correct answer per the rulebook.
+- Cover all major rule areas. Do not cluster on one topic.
+- No ambiguity. No trick questions. Grounded strictly in the rulebook above.
 
-function pick(l){answers[currentQ]=l;renderQ();}
-function go(d){currentQ=Math.max(0,Math.min(questions.length-1,currentQ+d));renderQ();}
-function confirmSubmit(){const u=questions.length-Object.keys(answers).length;if(u>0&&!confirm(`${u} question(s) unanswered. Submit anyway?`))return;submitExam();}
+RESPOND WITH ONLY VALID JSON — no markdown, no preamble, no explanation outside the JSON:
+{"questions":[{"id":1,"question":"...","options":{"A":"...","B":"...","C":"...","D":"..."},"correct":"A","explanation":"Brief rule citation."}]}`;
 
-function submitExam(){
-  clearInterval(timerInterval);
-  let correct=0,wrong=0,skipped=0;const items=[];
-  questions.forEach((q,i)=>{const ua=answers[i];if(!ua){skipped++;items.push({q,ua,status:'skipped',i});}else if(ua===q.correct){correct++;items.push({q,ua,status:'correct',i});}else{wrong++;items.push({q,ua,status:'incorrect',i});}});
-  const pct=Math.round((correct/questions.length)*100);
-  let tier,verdictText,statusText,bannerHTML;
-  if(pct>=95){tier='full';verdictText='LICENCED';statusText='FULL PASS — WSC F1 DRIVER LICENCE GRANTED';bannerHTML=`<strong>✓ WSC F1 DRIVER LICENCE ISSUED</strong><br><span>Score: ${correct}/50 (${pct}%). Full mastery of WSC F1 rules confirmed. Your licence is active. Welcome to the F1 grid.</span>`;}
-  else if(pct>=90){tier='prov';verdictText='PROVISIONAL';statusText='PROVISIONAL PASS — PENDING STAFF REVIEW';bannerHTML=`<strong>◐ PROVISIONAL F1 LICENCE ISSUED</strong><br><span>Score: ${correct}/50 (${pct}%). Provisional threshold met. Conditional licence issued — subject to WSC staff review. Score 95%+ on next attempt for full licence.</span>`;}
-  else{tier='fail';verdictText='FAILED';statusText='FAIL — LICENCE DENIED';bannerHTML=`<strong>✗ LICENCE DENIED</strong><br><span>Score: ${correct}/50 (${pct}%). Minimum provisional threshold is 90% (45/50). Study the WSC Unified Code and retake the full exam. Your seat is earned, not given.</span>`;}
-  document.getElementById('rVerdict').textContent=verdictText;document.getElementById('rVerdict').className=`result-verdict ${tier}`;
-  document.getElementById('rStatus').textContent=statusText;document.getElementById('rStatus').className=`result-status ${tier}`;
-  document.getElementById('rPct').textContent=`${pct}%`;document.getElementById('rPct').className=`result-pct ${tier}`;
-  document.getElementById('rSub').textContent=`${correct} of ${questions.length} correct`;
-  document.getElementById('rBanner').className=`outcome-banner ${tier}`;document.getElementById('rBanner').innerHTML=bannerHTML;
-  document.getElementById('rCorrect').textContent=correct;document.getElementById('rWrong').textContent=wrong;document.getElementById('rSkipped').textContent=skipped;
-  const wrap=document.getElementById('reviewWrap');wrap.innerHTML='';
-  items.forEach(({q,ua,status,i})=>{const div=document.createElement('div');div.className=`rv-item ${status}`;const ct=q.options.find(o=>o.startsWith(q.correct))||q.correct;const ut=ua?(q.options.find(o=>o.startsWith(ua))||ua):null;div.innerHTML=`<div class="rv-q"><strong>Q${i+1}.</strong> ${q.q}</div><div class="rv-tags">${status==='correct'?`<span class="tag tag-ok">✓ ${ut}</span>`:''}${status==='incorrect'?`<span class="tag tag-bad">✗ Your answer: ${ut}</span><span class="tag tag-ok">✓ Correct: ${ct}</span>`:''}${status==='skipped'?`<span class="tag tag-skip">— Skipped</span><span class="tag tag-ok">✓ Correct: ${ct}</span>`:''}</div><div class="rv-exp">${q.explanation}</div>`;wrap.appendChild(div);});
-  showScreen('screenResults');window.scrollTo(0,0);
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:8000,messages:[{role:'user',content:prompt}]})
+  });
+  if (!res.ok) throw new Error(`API error ${res.status} — ${res.statusText}`);
+  const data = await res.json();
+  const text = data.content.map(b => b.text||'').join('');
+  const clean = text.replace(/```json|```/g,'').trim();
+  const parsed = JSON.parse(clean);
+  if (!parsed.questions || !parsed.questions.length) throw new Error('No questions returned from API.');
+  return parsed.questions;
 }
 
-function startTimer(){clearInterval(timerInterval);timerInterval=setInterval(()=>{secondsLeft--;const m=Math.floor(secondsLeft/60),s=secondsLeft%60;const el=document.getElementById('timerDisplay');el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;el.className='timer-display';if(secondsLeft<=300)el.classList.add('warning');if(secondsLeft<=60)el.classList.add('critical');if(secondsLeft<=0){clearInterval(timerInterval);submitExam();}},1000);}
+// ── RENDER EXAM ──────────────────────────────────────────────────────────────
+function renderExam() {
+  renderQ();
+  renderMap();
+  updateSidebar();
+  const next = document.getElementById('btnNext');
+  const prev = document.getElementById('btnPrev');
+  prev.disabled = current === 0;
+  if (current === questions.length - 1) {
+    next.textContent = 'Submit Exam ✓';
+    next.className = 'btn btn-submit';
+    next.onclick = () => submit();
+  } else {
+    next.textContent = 'Next →';
+    next.className = 'btn btn-next';
+    next.onclick = () => nav(1);
+  }
+}
 
-function resetExam(){clearInterval(timerInterval);questions=[];answers={};currentQ=0;secondsLeft=30*60;document.getElementById('timerDisplay').textContent='30:00';document.getElementById('timerDisplay').className='timer-display';document.getElementById('progFill').style.width='0%';document.getElementById('btnStart').disabled=false;document.querySelectorAll('.err-box').forEach(e=>e.remove());showScreen('screenIntro');}
+function renderQ() {
+  const q = questions[current];
+  document.getElementById('qNum').textContent = `Q${String(current+1).padStart(2,'0')} / ${questions.length}`;
+  document.getElementById('qSec').textContent = q.section || '';
+  document.getElementById('qText').textContent = q.question;
+  const opts = document.getElementById('opts');
+  opts.innerHTML = '';
+  ['A','B','C','D'].forEach(k => {
+    const b = document.createElement('button');
+    b.className = 'opt' + (answers[current] === k ? ' sel' : '');
+    b.disabled = submitted;
+    b.innerHTML = `<span class="opt-k">${k}</span><span>${q.options[k]}</span>`;
+    b.onclick = () => { answers[current] = k; renderQ(); renderMap(); updateSidebar(); };
+    opts.appendChild(b);
+  });
+}
 
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function renderMap() {
+  const map = document.getElementById('qMap');
+  map.innerHTML = '';
+  questions.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'qd' + (i===current?' cur':answers[i]?' ans':'');
+    d.textContent = i+1;
+    d.onclick = () => { current=i; renderExam(); };
+    map.appendChild(d);
+  });
+}
+
+function updateSidebar() {
+  const ans = Object.keys(answers).length;
+  document.getElementById('sbAns').textContent = `${ans}/${questions.length}`;
+  document.getElementById('sbRem').textContent = questions.length - ans;
+  document.getElementById('progressFill').style.width = `${(ans/questions.length)*100}%`;
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────────────────────
+function nav(dir) {
+  current = Math.max(0, Math.min(questions.length-1, current+dir));
+  renderExam();
+}
+
+// ── TIMER ────────────────────────────────────────────────────────────────────
+function startTimer() {
+  timerSecs = EXAM.minutes * 60;
+  timerInt = setInterval(() => {
+    timerSecs--;
+    const t = document.getElementById('timer');
+    const s = document.getElementById('sbTime');
+    const fmt = fmtTime(timerSecs);
+    t.textContent = fmt; s.textContent = fmt;
+    t.classList.toggle('warn', timerSecs < 120);
+    s.style.color = timerSecs < 120 ? 'var(--red)' : 'var(--gold)';
+    if (timerSecs <= 0) { clearInterval(timerInt); submit(); }
+  }, 1000);
+}
+
+function fmtTime(s) {
+  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────────────────────
+function submit() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInt);
+  renderResults();
+  show('screenResults');
+}
+
+// ── RESULTS ──────────────────────────────────────────────────────────────────
+function renderResults() {
+  let correct = 0;
+  const detail = questions.map((q,i) => {
+    const ua = answers[i];
+    const ok = ua === q.correct;
+    if (ok) correct++;
+    return {...q, userAnswer:ua, ok};
+  });
+  const pct = correct / questions.length;
+  const pctPct = Math.round(pct * 100);
+
+  let verdict, verdictClass;
+  if (EXAM.hasProvisional) {
+    if (pct >= EXAM.passThreshold) { verdict = 'CERTIFIED'; verdictClass = 'pass'; }
+    else if (pct >= EXAM.provisionalThreshold) { verdict = 'PROVISIONAL'; verdictClass = 'prov'; }
+    else { verdict = 'FAILED'; verdictClass = 'fail'; }
+  } else {
+    verdict = pct >= EXAM.passThreshold ? 'CERTIFIED' : 'FAILED';
+    verdictClass = pct >= EXAM.passThreshold ? 'pass' : 'fail';
+  }
+
+  const scoreColor = verdictClass==='pass'?'var(--green)':verdictClass==='prov'?'var(--gold)':'var(--red)';
+
+  let extraBanner = '';
+  if (verdictClass !== 'fail' && pct >= EXAM.passThreshold) {
+    extraBanner = `<div class="dist-banner"><div class="dist-t">★ Result Reported to WSC Staff</div><div class="dist-d">Your score of ${pctPct}% qualifies as a Full Pass and has been reported to WSC Staff. Your licence will be confirmed following staff acknowledgment.</div></div>`;
+  } else if (verdictClass === 'prov') {
+    extraBanner = `<div class="prov-banner"><div class="prov-t">Provisional Pass — Staff Review Required</div><div class="prov-d">Your score of ${pctPct}% qualifies for a Provisional Licence. This is subject to WSC Staff review before your licence is confirmed. You may retake to achieve a Full Pass.</div></div>`;
+  }
+
+  const descText = verdictClass === 'pass'
+    ? `You answered ${correct} of ${questions.length} questions correctly. Certification threshold of ${Math.round(EXAM.passThreshold*100)}% met.`
+    : verdictClass === 'prov'
+    ? `You answered ${correct} of ${questions.length} correctly. Score qualifies for a provisional licence — subject to staff review.`
+    : `You answered ${correct} of ${questions.length} correctly. Minimum required: ${Math.ceil(questions.length*EXAM.passThreshold)} correct (${Math.round(EXAM.passThreshold*100)}%). Retake required.`;
+
+  document.getElementById('resultsBody').innerHTML = `
+    <div class="verdict-block">
+      <div class="v-eye">${EXAM.league} · ${EXAM.title}</div>
+      <div class="v-title ${verdictClass}">${verdict}</div>
+      <div class="v-score" style="color:${scoreColor}">${pctPct}%</div>
+      <div class="v-desc">${descText}</div>
+    </div>
+    <div class="r-stats">
+      <div class="rs"><div class="rsv" style="color:var(--green)">${correct}</div><div class="rsl">Correct</div></div>
+      <div class="rs"><div class="rsv" style="color:var(--red)">${questions.length-correct}</div><div class="rsl">Incorrect</div></div>
+      <div class="rs"><div class="rsv" style="color:var(--gold)">${pctPct}%</div><div class="rsl">Score</div></div>
+      <div class="rs"><div class="rsv" style="color:${scoreColor}">${verdictClass==='fail'?'✗':'✓'}</div><div class="rsl">Status</div></div>
+    </div>
+    ${extraBanner}
+    <div class="rev-head">
+      <div class="rev-title">Question Review</div>
+      <button class="toggle-btn" onclick="toggleReview(this)">Show Review</button>
+    </div>
+    <div class="review-list" id="reviewList">
+      ${detail.map((q,i) => `
+        <div class="ri ${q.ok?'c':'w'}">
+          <div class="ri-head">
+            <span class="ri-n">Q${String(i+1).padStart(2,'0')}</span>
+            <span class="ri-tag ${q.ok?'c':q.userAnswer?'w':'s'}">${q.ok?'Correct':q.userAnswer?'Incorrect':'Skipped'}</span>
+          </div>
+          <div class="ri-q">${q.question}</div>
+          <div class="ri-ans">Your answer: <span>${q.userAnswer ? q.userAnswer+'. '+q.options[q.userAnswer] : 'Not answered'}</span>${!q.ok?`<br>Correct: <span style="color:var(--green)">${q.correct}. ${q.options[q.correct]}</span>`:''}</div>
+          <div class="ri-exp">${q.explanation}</div>
+        </div>
+      `).join('')}
+    </div>
+    <button class="retake-btn" onclick="retake()">↺ Generate New Exam &amp; Retake</button>
+  `;
+}
+
+function toggleReview(btn) {
+  const list = document.getElementById('reviewList');
+  const open = list.classList.toggle('open');
+  btn.textContent = open ? 'Hide Review' : 'Show Review';
+}
+
+async function retake() {
+  questions=[]; current=0; answers={}; submitted=false; timerSecs=EXAM.minutes*60;
+  document.getElementById('progressFill').style.width='0';
+  document.getElementById('timer').textContent=fmtTime(EXAM.minutes*60);
+  document.getElementById('timer').classList.remove('warn');
+  await generate();
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function show(id) {
+  ['screenLoad','screenError','screenExam','screenResults'].forEach(s => {
+    document.getElementById(s).classList.toggle('hidden', s!==id);
+  });
+}
+
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
 </script>
+
 </body>
 </html>
