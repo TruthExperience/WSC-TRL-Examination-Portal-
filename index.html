@@ -4,245 +4,957 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WSC & TRL Examination Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,600&family=Barlow:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>PitBoss — TRL & WSC Examination Portal</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#09090b;--surface:#111116;--surface2:#17171d;--surface3:#1e1e26;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
-  --gold:#C8A84B;--gold-dim:rgba(200,168,75,0.12);--gold-mid:rgba(200,168,75,0.25);
-  --white:#EAEAEE;--muted:rgba(234,234,238,0.42);
-  --green:#4DC98A;--red:#E05555;
-  --ff-display:'Barlow Condensed',sans-serif;
-  --ff-body:'Barlow',sans-serif;
-  --ff-mono:'Share Tech Mono',monospace;
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;600;700;900&display=swap');
+
+:root {
+–gold: #C9A84C;
+–gold-light: #E8C96E;
+–gold-dim: #8A6E2F;
+–gold-faint: rgba(201,168,76,0.08);
+–black: #040507;
+–dark: #08090D;
+–panel: #0C0E14;
+–panel2: #101420;
+–border: #181E28;
+–border-gold: rgba(201,168,76,0.2);
+–text: #C8D4E4;
+–text-dim: #6A7888;
+–red: #B83030;
+–green: #287840;
+–silver: #8EA0B4;
+–wsc-blue: #4080C0;
 }
-body{background:var(--bg);color:var(--white);font-family:var(--ff-body);min-height:100vh;overflow-x:hidden}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--surface)}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
 
-/* GRID BG */
-.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
-background-image:linear-gradient(rgba(200,168,75,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,75,0.025) 1px,transparent 1px);
-background-size:56px 56px}
-.bg-vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
-background:radial-gradient(ellipse at center,transparent 40%,rgba(9,9,11,0.8) 100%)}
+- { margin: 0; padding: 0; box-sizing: border-box; }
 
-.wrap{position:relative;z-index:1}
+html { scroll-behavior: smooth; }
 
-/* HEADER */
-header{
-height:60px;display:flex;align-items:center;justify-content:space-between;
-padding:0 40px;border-bottom:1px solid var(–border);
-background:rgba(9,9,11,0.85);backdrop-filter:blur(16px);
-position:sticky;top:0;z-index:100;
+body {
+font-family: ‘Exo 2’, sans-serif;
+background: var(–black);
+color: var(–text);
+min-height: 100vh;
+overflow-x: hidden;
 }
-.logo{font-family:var(–ff-display);font-weight:800;font-size:20px;letter-spacing:0.18em;color:var(–gold);text-decoration:none}
-.logo em{color:var(–muted);font-style:normal;font-weight:300}
-.header-right{font-family:var(–ff-mono);font-size:10px;letter-spacing:0.2em;color:var(–muted);text-transform:uppercase}
 
-/* HERO */
-.hero{padding:72px 40px 52px;max-width:1080px;margin:0 auto;text-align:center}
-.hero-eye{
-font-family:var(–ff-mono);font-size:10px;letter-spacing:0.4em;color:var(–gold);
-text-transform:uppercase;margin-bottom:22px;
-display:flex;align-items:center;justify-content:center;gap:14px;
+/* Background: animated scan lines + grid */
+body::before {
+content: ‘’;
+position: fixed; inset: 0;
+background:
+repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(201,168,76,0.015) 2px, rgba(201,168,76,0.015) 4px),
+linear-gradient(rgba(201,168,76,0.025) 1px, transparent 1px) 0 0 / 60px 60px,
+linear-gradient(90deg, rgba(201,168,76,0.025) 1px, transparent 1px) 0 0 / 60px 60px;
+pointer-events: none; z-index: 0;
 }
-.hero-eye::before,.hero-eye::after{content:’’;display:block;width:36px;height:1px;background:var(–gold-dim)}
-h1{font-family:var(–ff-display);font-size:clamp(52px,8vw,96px);font-weight:800;line-height:0.88;text-transform:uppercase;margin-bottom:22px;letter-spacing:-0.01em}
-h1 .l1{display:block;color:var(–white)}
-h1 .l2{display:block;color:var(–gold);font-style:italic}
-.hero-desc{font-size:14px;color:var(–muted);line-height:1.75;max-width:480px;margin:0 auto 44px;font-weight:300}
 
-/* FILTER TABS */
-.tabs{display:flex;gap:2px;justify-content:center;margin-bottom:48px;background:var(–surface);border:1px solid var(–border);border-radius:4px;padding:3px;width:fit-content;margin-left:auto;margin-right:auto}
-.tab{font-family:var(–ff-display);font-weight:700;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;padding:7px 22px;border:none;border-radius:3px;cursor:pointer;transition:all 0.15s;background:transparent;color:var(–muted)}
-.tab.on{background:var(–gold);color:#09090b}
-.tab:not(.on):hover{color:var(–white);background:var(–surface3)}
-
-/* EXAM GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px;max-width:1080px;margin:0 auto;padding:0 40px 72px}
-.card{background:var(–surface);border:1px solid var(–border);border-radius:6px;padding:26px;position:relative;overflow:hidden;transition:all 0.2s;text-decoration:none;display:block;cursor:pointer}
-.card::after{content:’’;position:absolute;top:0;left:0;right:0;height:2px;background:var(–gold);transform:scaleX(0);transform-origin:left;transition:transform 0.25s ease}
-.card:hover{border-color:var(–border2);background:var(–surface2);transform:translateY(-2px);box-shadow:0 10px 48px rgba(0,0,0,0.45)}
-.card:hover::after{transform:scaleX(1)}
-.card.hidden{display:none}
-
-.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(–ff-mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;padding:3px 9px;border-radius:2px;margin-bottom:14px}
-.badge-wsc{background:rgba(200,168,75,0.1);color:var(–gold);border:1px solid rgba(200,168,75,0.22)}
-.badge-trl{background:rgba(234,234,238,0.07);color:var(–white);border:1px solid rgba(234,234,238,0.16)}
-
-.card-title{font-family:var(–ff-display);font-weight:700;font-size:19px;letter-spacing:0.03em;text-transform:uppercase;margin-bottom:4px;color:var(–white);line-height:1.2}
-.card-sub{font-size:11px;color:var(–muted);margin-bottom:20px}
-
-.stats{display:flex;border:1px solid var(–border);border-radius:3px;overflow:hidden;margin-bottom:18px}
-.st{flex:1;padding:9px 10px;text-align:center;border-right:1px solid var(–border)}
-.st:last-child{border-right:none}
-.stv{font-family:var(–ff-display);font-size:20px;font-weight:700;color:var(–gold);line-height:1}
-.stl{font-size:8px;letter-spacing:0.14em;color:var(–muted);text-transform:uppercase;margin-top:2px}
-
-.pass-note{font-size:10px;color:var(–muted);padding:7px 10px;background:var(–surface3);border-radius:3px;border-left:2px solid var(–gold);margin-bottom:18px;line-height:1.5}
-
-.cta{width:100%;padding:11px;background:var(–gold);color:#09090b;border:none;border-radius:3px;font-family:var(–ff-display);font-weight:700;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.15s}
-.cta:hover{background:#D4B45A}
-
-/* STANDARDS */
-.standards{max-width:1080px;margin:0 auto;padding:0 40px 64px}
-.sec-head{font-family:var(–ff-mono);font-size:10px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(–muted);margin-bottom:18px;display:flex;align-items:center;gap:14px}
-.sec-head::after{content:’’;flex:1;height:1px;background:var(–border)}
-.std-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.std{background:var(–surface);border:1px solid var(–border);border-radius:4px;padding:18px}
-.std-lbl{font-family:var(–ff-display);font-weight:700;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px}
-.std-lbl.g{color:var(–green)}.std-lbl.y{color:var(–gold)}.std-lbl.r{color:var(–red)}
-.std-desc{font-size:11px;color:var(–muted);line-height:1.65}
-
-/* HOW IT WORKS */
-.how{max-width:1080px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.hw{background:var(–surface);border:1px solid var(–border);border-radius:4px;padding:18px}
-.hw-n{font-family:var(–ff-mono);font-size:20px;color:var(–gold);margin-bottom:8px}
-.hw-t{font-family:var(–ff-display);font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px}
-.hw-d{font-size:11px;color:var(–muted);line-height:1.6}
-
-/* FOOTER */
-footer{border-top:1px solid var(–border);padding:24px 40px;display:flex;justify-content:space-between;align-items:center}
-.ft-l{font-family:var(–ff-mono);font-size:9px;letter-spacing:0.2em;color:var(–muted);text-transform:uppercase}
-.ft-r{font-size:11px;color:var(–muted);font-style:italic}
-
-@media(max-width:680px){
-header{padding:0 20px}.hero{padding:48px 20px 36px}
-.grid{padding:0 20px 48px;grid-template-columns:1fr}
-.standards{padding:0 20px 40px}.std-grid{grid-template-columns:1fr}
-.how{padding:0 20px 48px;grid-template-columns:repeat(2,1fr)}
-footer{padding:20px;flex-direction:column;gap:8px;text-align:center}
+/* Radial glow top-right */
+body::after {
+content: ‘’;
+position: fixed; top: -100px; right: -100px;
+width: 500px; height: 500px;
+background: radial-gradient(ellipse, rgba(201,168,76,0.04) 0%, transparent 70%);
+pointer-events: none; z-index: 0;
 }
+
+/* ─── NAV ─── */
+.nav {
+position: sticky; top: 0;
+background: rgba(4,5,7,0.92);
+backdrop-filter: blur(12px);
+border-bottom: 1px solid var(–border);
+padding: 0 32px;
+display: flex; align-items: center; justify-content: space-between;
+height: 56px;
+z-index: 200;
+}
+
+.nav-brand {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 20px;
+font-weight: 900;
+letter-spacing: 4px;
+color: #fff;
+text-transform: uppercase;
+}
+
+.nav-brand span { color: var(–gold); }
+
+.nav-links {
+display: flex; gap: 24px;
+list-style: none;
+}
+
+.nav-links a {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 11px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-decoration: none;
+text-transform: uppercase;
+transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(–gold); }
+
+@media(max-width: 600px) { .nav-links { display: none; } }
+
+/* ─── HERO ─── */
+.hero {
+padding: 100px 32px 80px;
+text-align: center;
+position: relative; z-index: 1;
+max-width: 900px;
+margin: 0 auto;
+}
+
+.hero-eyebrow {
+display: inline-flex; align-items: center; gap: 10px;
+background: var(–gold-faint);
+border: 1px solid var(–border-gold);
+padding: 6px 18px;
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+color: var(–gold-dim);
+text-transform: uppercase;
+margin-bottom: 28px;
+}
+
+.hero-eyebrow::before { content: ‘●’; color: var(–gold); animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.hero-title {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: clamp(40px, 8vw, 88px);
+font-weight: 900;
+letter-spacing: 8px;
+text-transform: uppercase;
+line-height: 0.9;
+color: #fff;
+margin-bottom: 12px;
+}
+
+.hero-title .gold { color: var(–gold); }
+.hero-title .dim { color: var(–text-dim); }
+
+.hero-sub {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 13px;
+letter-spacing: 4px;
+color: var(–text-dim);
+text-transform: uppercase;
+margin: 20px 0;
+}
+
+.hero-desc {
+max-width: 580px; margin: 0 auto;
+font-size: 15px;
+color: var(–text-dim);
+line-height: 1.8;
+}
+
+.hero-desc strong { color: var(–text); }
+
+.hero-divider {
+margin: 48px auto;
+width: 120px;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(–gold), transparent);
+}
+
+/* ─── SECTION LABELS ─── */
+.section {
+max-width: 1000px;
+margin: 0 auto 60px;
+padding: 0 24px;
+position: relative; z-index: 1;
+}
+
+.section-header {
+display: flex; align-items: center; gap: 16px;
+margin-bottom: 24px;
+}
+
+.section-badge {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+color: var(–gold);
+text-transform: uppercase;
+padding: 4px 12px;
+border: 1px solid var(–border-gold);
+background: var(–gold-faint);
+white-space: nowrap;
+}
+
+.section-title {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 22px;
+font-weight: 700;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: #fff;
+}
+
+.section-line {
+flex: 1;
+height: 1px;
+background: linear-gradient(90deg, var(–border-gold), transparent);
+}
+
+/* ─── EXAM CARDS ─── */
+.exam-grid {
+display: grid;
+gap: 14px;
+}
+
+.exam-grid.cols2 { grid-template-columns: repeat(2, 1fr); }
+.exam-grid.cols3 { grid-template-columns: repeat(3, 1fr); }
+
+@media(max-width: 768px) {
+.exam-grid.cols2, .exam-grid.cols3 { grid-template-columns: 1fr; }
+}
+
+.exam-card {
+background: var(–panel);
+border: 1px solid var(–border);
+padding: 24px;
+text-decoration: none;
+color: inherit;
+display: flex; flex-direction: column;
+position: relative; overflow: hidden;
+transition: all 0.2s;
+cursor: pointer;
+}
+
+.exam-card::before {
+content: ‘’;
+position: absolute; top: 0; left: 0; right: 0;
+height: 2px;
+background: var(–card-accent, var(–gold));
+transform: scaleX(0);
+transition: transform 0.25s;
+}
+
+.exam-card:hover { border-color: var(–card-accent, var(–gold)); background: var(–panel2); transform: translateY(-1px); }
+.exam-card:hover::before { transform: scaleX(1); }
+
+.exam-card-league {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 9px;
+letter-spacing: 3px;
+color: var(–card-accent, var(–gold));
+text-transform: uppercase;
+margin-bottom: 8px;
+opacity: 0.8;
+}
+
+.exam-card-title {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 19px;
+font-weight: 700;
+letter-spacing: 1px;
+color: #fff;
+margin-bottom: 8px;
+line-height: 1.2;
+}
+
+.exam-card-desc {
+font-size: 12px;
+color: var(–text-dim);
+line-height: 1.6;
+flex: 1;
+margin-bottom: 16px;
+}
+
+.exam-card-meta {
+display: flex; gap: 16px; flex-wrap: wrap;
+border-top: 1px solid var(–border);
+padding-top: 14px;
+margin-top: auto;
+}
+
+.exam-meta-item {
+text-align: center;
+}
+
+.exam-meta-val {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 14px;
+color: var(–card-accent, var(–gold));
+line-height: 1;
+margin-bottom: 2px;
+}
+
+.exam-meta-label {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 8px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-transform: uppercase;
+}
+
+.exam-card-cta {
+margin-top: 16px;
+display: inline-block;
+padding: 10px 18px;
+background: var(–card-accent, var(–gold));
+color: var(–black);
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 2px;
+text-transform: uppercase;
+transition: all 0.2s;
+border: none;
+cursor: pointer;
+text-decoration: none;
+text-align: center;
+}
+
+.exam-card-cta:hover { filter: brightness(1.15); }
+
+/* ─── PASSES INFO ─── */
+.pass-info-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 12px;
+margin-bottom: 28px;
+}
+
+@media(max-width: 600px) { .pass-info-grid { grid-template-columns: 1fr; } }
+
+.pass-card {
+background: var(–panel);
+border: 1px solid var(–border);
+border-left: 3px solid;
+padding: 16px 20px;
+}
+
+.pass-card.full { border-left-color: var(–green); }
+.pass-card.prov { border-left-color: #F0A020; }
+.pass-card.fail { border-left-color: var(–red); }
+
+.pass-label {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 9px;
+letter-spacing: 3px;
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+
+.pass-card.full .pass-label { color: var(–green); }
+.pass-card.prov .pass-label { color: #F0A020; }
+.pass-card.fail .pass-label { color: var(–red); }
+
+.pass-threshold {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 28px;
+font-weight: 700;
+line-height: 1;
+margin-bottom: 4px;
+color: #fff;
+}
+
+.pass-desc { font-size: 12px; color: var(–text-dim); line-height: 1.5; }
+
+/* ─── HOW IT WORKS ─── */
+.how-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 14px;
+}
+
+@media(max-width: 600px) { .how-grid { grid-template-columns: 1fr; } }
+
+.how-card {
+background: var(–panel);
+border: 1px solid var(–border);
+padding: 20px 24px;
+display: flex; gap: 16px;
+}
+
+.how-number {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 48px;
+font-weight: 900;
+color: var(–border);
+line-height: 1;
+flex-shrink: 0;
+width: 48px;
+}
+
+.how-title {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 16px;
+font-weight: 700;
+letter-spacing: 1px;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+
+.how-desc { font-size: 12px; color: var(–text-dim); line-height: 1.6; }
+
+/* ─── KNOWLEDGE BASE ─── */
+.kb-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 12px;
+}
+
+@media(max-width: 600px) { .kb-grid { grid-template-columns: 1fr; } }
+
+.kb-item {
+background: var(–panel);
+border: 1px solid var(–border);
+padding: 14px 18px;
+display: flex; align-items: flex-start; gap: 12px;
+}
+
+.kb-dot {
+width: 8px; height: 8px; border-radius: 50%;
+background: var(–gold);
+flex-shrink: 0;
+margin-top: 5px;
+}
+
+.kb-title {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 14px;
+font-weight: 600;
+color: var(–text);
+margin-bottom: 2px;
+}
+
+.kb-desc { font-size: 11px; color: var(–text-dim); line-height: 1.5; }
+
+/* ─── SPECIAL NOTES ─── */
+.special-notes {
+background: rgba(201,168,76,0.04);
+border: 1px solid var(–border-gold);
+padding: 24px 28px;
+margin-bottom: 32px;
+}
+
+.special-notes-title {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 14px;
+}
+
+.note-item {
+display: flex; gap: 10px;
+padding: 10px 0;
+border-bottom: 1px solid var(–border);
+font-size: 13px;
+color: var(–text-dim);
+line-height: 1.5;
+}
+
+.note-item:last-child { border-bottom: none; }
+.note-item::before { content: ‘★’; color: var(–gold); flex-shrink: 0; }
+.note-item strong { color: var(–text); }
+
+/* ─── FOOTER ─── */
+.footer {
+border-top: 1px solid var(–border);
+padding: 32px 24px;
+text-align: center;
+position: relative; z-index: 1;
+max-width: 800px; margin: 0 auto;
+}
+
+.footer-brand {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 24px;
+font-weight: 900;
+letter-spacing: 6px;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+
+.footer-motto {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 11px;
+letter-spacing: 3px;
+color: var(–text-dim);
+margin-bottom: 16px;
+}
+
+.footer-legal {
+font-size: 11px;
+color: var(–text-dim);
+opacity: 0.5;
+line-height: 1.7;
+}
+
+/* ─── ANIMS ─── */
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(20px); }
+to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero { animation: fadeUp 0.6s ease forwards; }
+.exam-card { animation: fadeUp 0.4s ease forwards; }
 </style>
 
 </head>
 <body>
-<div class="bg-grid"></div>
-<div class="bg-vignette"></div>
-<div class="wrap">
 
-<header>
-  <a class="logo" href="index.html">PIT<em>BOSS</em></a>
-  <div class="header-right">Certification System · v1.2</div>
-</header>
+<!-- NAV -->
+
+<nav class="nav">
+  <div class="nav-brand">Pit<span>Boss</span></div>
+  <ul class="nav-links">
+    <li><a href="#trl">TRL Exams</a></li>
+    <li><a href="#wsc">WSC Exams</a></li>
+    <li><a href="#passing">Standards</a></li>
+    <li><a href="#kb">Knowledge Base</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
 
 <div class="hero">
-  <div class="hero-eye">Official Certification Examinations</div>
-  <h1><span class="l1">WSC & TRL</span><span class="l2">Examination Portal</span></h1>
-  <p class="hero-desc">AI-powered certification exams for the World Series Championship and Truth Racing League. Questions generated fresh from official rulebooks on every attempt. No two exams are identical.</p>
+  <div class="hero-eyebrow">PitBoss Certification Platform — Official Examination Portal</div>
+  <div class="hero-title">
+    <div class="dim">TRL</div>
+    <div class="gold">& WSC</div>
+    <div>EXAMINATIONS</div>
+  </div>
+  <div class="hero-sub">Meritocracy Forged in Truth</div>
+  <div class="hero-desc">
+    Official certification examinations for the <strong>Truth Racing League (TRL)</strong> and <strong>World Series Championship (WSC)</strong>. All exams are AI-powered — questions generated fresh from official rulebooks on every attempt. No two exams are identical.
+    <br><br>
+    <strong>Your seat is earned, not given.</strong>
+  </div>
+  <div class="hero-divider"></div>
+</div>
 
-  <div class="tabs">
-    <button class="tab on" onclick="filter('ALL',this)">All Exams</button>
-    <button class="tab" onclick="filter('WSC',this)">WSC</button>
-    <button class="tab" onclick="filter('TRL',this)">TRL</button>
+<!-- ─── TRL SECTION ─── -->
+
+<div class="section" id="trl">
+  <div class="section-header">
+    <div class="section-badge">TRL</div>
+    <div class="section-title">Truth Racing League — F1 Division</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="exam-grid cols3" style="margin-bottom: 14px;">
+
+```
+<!-- TRL Elite Driver -->
+<div class="exam-card" style="--card-accent: #C9A84C" onclick="window.location.href='trl_driver_f1_exam.html'">
+  <div class="exam-card-league">TRL F1 — Elite Tier</div>
+  <div class="exam-card-title">F1 Elite Driver Certification</div>
+  <div class="exam-card-desc">No TC · No ABS · Manual Only. The pinnacle of TRL competition. Tests forensic telemetry standards, FIA ISC & Appendix L, full divebomb adjudication, and Elo/financial system mastery. Includes era endorsement for [E-GE], [E-AP], or [E-NC].</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item">
+      <div class="exam-meta-val">60</div>
+      <div class="exam-meta-label">Questions</div>
+    </div>
+    <div class="exam-meta-item">
+      <div class="exam-meta-val">35</div>
+      <div class="exam-meta-label">Minutes</div>
+    </div>
+    <div class="exam-meta-item">
+      <div class="exam-meta-val">95%</div>
+      <div class="exam-meta-label">Pass</div>
+    </div>
+    <div class="exam-meta-item">
+      <div class="exam-meta-val">1.0x</div>
+      <div class="exam-meta-label">Elo Multi</div>
+    </div>
+  </div>
+  <a class="exam-card-cta" href="trl_driver_f1_exam.html">BEGIN EXAM →</a>
+</div>
+
+<!-- TRL Apex Pro Driver -->
+<div class="exam-card" style="--card-accent: #8080E0" onclick="window.location.href='trl_driver_f1_exam.html'">
+  <div class="exam-card-league">TRL F1 — Apex Pro Tier</div>
+  <div class="exam-card-title">F1 Apex Pro Driver Certification</div>
+  <div class="exam-card-desc">Med/No TC · No ABS · Manual. Second-highest F1 tier. Tests sporting code mastery, PP system, defend/attack standards, and era physics. Includes era endorsement selection.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val">50</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">30</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">95%</div><div class="exam-meta-label">Pass</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">0.85x</div><div class="exam-meta-label">Elo Multi</div></div>
+  </div>
+  <a class="exam-card-cta" href="trl_driver_f1_exam.html" style="background:#8080E0">BEGIN EXAM →</a>
+</div>
+
+<!-- TRL Apex Driver -->
+<div class="exam-card" style="--card-accent: #40A0C0" onclick="window.location.href='trl_driver_f1_exam.html'">
+  <div class="exam-card-league">TRL F1 — Apex Tier</div>
+  <div class="exam-card-title">F1 Apex Driver Certification</div>
+  <div class="exam-card-desc">ABS · Med TC · Corner Line. Competitive mid-tier. Tests core sporting code, basic forensic standards, PP thresholds, and fundamental overtaking law. Includes era endorsement.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val">40</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">25</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">95%</div><div class="exam-meta-label">Pass</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">0.75x</div><div class="exam-meta-label">Elo Multi</div></div>
+  </div>
+  <a class="exam-card-cta" href="trl_driver_f1_exam.html" style="background:#40A0C0">BEGIN EXAM →</a>
+</div>
+```
+
+  </div>
+
+  <!-- F2 Section header -->
+
+  <div class="section-header" style="margin-top: 40px;" id="trlf2">
+    <div class="section-badge" style="color:var(--silver);border-color:rgba(158,170,187,0.3);background:rgba(158,170,187,0.04)">TRL F2</div>
+    <div class="section-title" style="color:var(--silver)">Truth Racing League — F2 Academy Division</div>
+    <div class="section-line" style="background: linear-gradient(90deg, rgba(158,170,187,0.3), transparent)"></div>
+  </div>
+
+  <div class="exam-grid cols3">
+
+```
+<!-- Academy Elite -->
+<div class="exam-card" style="--card-accent: #C090FF" onclick="window.location.href='trl_driver_f2_exam.html'">
+  <div class="exam-card-league" style="color:#C090FF">TRL F2 — Academy Elite</div>
+  <div class="exam-card-title">Academy Elite Certification</div>
+  <div class="exam-card-desc">No TC · No ABS · Suggested Gearbox OK. Hardest F2 tier. Tests near-F1 knowledge including SLB Combine requirements, promotion gates, and full incident standards.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#C090FF">40</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#C090FF">25</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#C090FF">95%</div><div class="exam-meta-label">Pass</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#C090FF">0.5x</div><div class="exam-meta-label">Elo Multi</div></div>
+  </div>
+  <a class="exam-card-cta" href="trl_driver_f2_exam.html" style="background:#C090FF">BEGIN EXAM →</a>
+</div>
+
+<!-- Academy Pro -->
+<div class="exam-card" style="--card-accent: #70B0E0" onclick="window.location.href='trl_driver_f2_exam.html'">
+  <div class="exam-card-league" style="color:#70B0E0">TRL F2 — Academy Pro</div>
+  <div class="exam-card-title">Academy Pro Certification</div>
+  <div class="exam-card-desc">Apex Pro restrictions + Corner Line. Intermediate development tier. Focused on core sporting code, attendance obligations, and PP system understanding.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#70B0E0">35</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#70B0E0">22</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#70B0E0">95%</div><div class="exam-meta-label">Pass</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#70B0E0">0.25x</div><div class="exam-meta-label">Elo Multi</div></div>
+  </div>
+  <a class="exam-card-cta" href="trl_driver_f2_exam.html" style="background:#70B0E0">BEGIN EXAM →</a>
+</div>
+
+<!-- Academy -->
+<div class="exam-card" style="--card-accent: #60C080" onclick="window.location.href='trl_driver_f2_exam.html'">
+  <div class="exam-card-league" style="color:#60C080">TRL F2 — Academy</div>
+  <div class="exam-card-title">Academy Entry Certification</div>
+  <div class="exam-card-desc">All assists permitted. Entry-level tier. Zero Elo, scholarship contracts only. Tests essential sporting code, conduct standards, and reporting requirements. Your first gate.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#60C080">30</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#60C080">20</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#60C080">95%</div><div class="exam-meta-label">Pass</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#60C080">0.0x</div><div class="exam-meta-label">Elo Multi</div></div>
+  </div>
+  <a class="exam-card-cta" href="trl_driver_f2_exam.html" style="background:#60C080">BEGIN EXAM →</a>
+</div>
+```
+
+  </div>
+
+  <!-- TRL Governance Section -->
+
+  <div class="section-header" style="margin-top: 40px;" id="trlgov">
+    <div class="section-badge">TRL — GOVERNANCE</div>
+    <div class="section-title">TRL Governance & Staff Exams</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="exam-grid cols2">
+
+```
+<!-- TRL Steward -->
+<div class="exam-card" style="--card-accent: #C9A84C" onclick="window.location.href='trl_stewards_exam.html'">
+  <div class="exam-card-league">TRL — STEWARDS PANEL</div>
+  <div class="exam-card-title">TRL Stewards Certification</div>
+  <div class="exam-card-desc">Full Stewards Panel certification including PP Calculator mastery, Calculated Divebomb adjudication framework, referral triggers, and the 15-minute Practical Incident Scenario. WSC Stewards scoring 95%+ earn optional invitation.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val">80</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">45</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">+15</div><div class="exam-meta-label">Practical</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val">95%</div><div class="exam-meta-label">Pass</div></div>
+  </div>
+  <a class="exam-card-cta" href="trl_stewards_exam.html">BEGIN EXAM →</a>
+</div>
+
+<!-- TRL BSAC -->
+<div class="exam-card" style="--card-accent: #D08020">
+  <div class="exam-card-league">TRL — HIGH COURT</div>
+  <div class="exam-card-title">BSAC Officer Certification</div>
+  <div class="exam-card-desc">Board of Sportsmanship & Accountability Commission. Hardest exam in the system. 90 questions covering investigative powers, subpoena compliance, sentencing matrix, Articles of Expulsion, standard of proof, and DPA jurisdiction. +15 min practical scenario.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#D08020">90</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#D08020">50</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#D08020">+15</div><div class="exam-meta-label">Practical</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#D08020">95%</div><div class="exam-meta-label">Pass</div></div>
+  </div>
+  <div class="exam-card-cta" style="background:#D08020;cursor:not-allowed;opacity:0.6">COMING SOON</div>
+</div>
+
+<!-- TRL Team Principal -->
+<div class="exam-card" style="--card-accent: #A060C0">
+  <div class="exam-card-league">TRL TRACK B — TEAM</div>
+  <div class="exam-card-title">Team Principal Certification</div>
+  <div class="exam-card-desc">Governance, Charter responsibilities, financial regulations, DPA framework, CRRB procedures, anti-tampering, and the full Council/separation of powers structure. Heaviest governance exam outside BSAC.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#A060C0">75</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#A060C0">45</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#A060C0">95%</div><div class="exam-meta-label">Pass</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#A060C0">None</div><div class="exam-meta-label">Practical</div></div>
+  </div>
+  <div class="exam-card-cta" style="background:#A060C0;cursor:not-allowed;opacity:0.6">COMING SOON</div>
+</div>
+
+<!-- More TRL -->
+<div class="exam-card" style="--card-accent: #607080; border-style: dashed;">
+  <div class="exam-card-league" style="color:#607080">TRL — PHASE 2</div>
+  <div class="exam-card-title" style="color:var(--text-dim)">Additional TRL Exams</div>
+  <div class="exam-card-desc">In development: Sporting Director (50Q), CRRB Officer (65Q), TWG / Technical Director (70Q), SLB Officer (55Q), Broadcast Director (40Q), Team Staff (30Q).</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#607080">7</div><div class="exam-meta-label">Roles</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#607080">30–70</div><div class="exam-meta-label">Questions</div></div>
+  </div>
+  <div style="margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:#607080">PHASE 2 — IN DEVELOPMENT</div>
+</div>
+```
+
   </div>
 </div>
 
-<div class="grid" id="examGrid">
+<!-- ─── WSC SECTION ─── -->
 
-  <div class="card" data-league="WSC" onclick="location.href='wsc_f1_driver_exam.html'">
-    <div class="badge badge-wsc">● WSC</div>
-    <div class="card-title">WSC F1 Driver Rules & Standards</div>
-    <div class="card-sub">World Series Championship — F1 Division</div>
-    <div class="stats">
-      <div class="st"><div class="stv">50</div><div class="stl">Questions</div></div>
-      <div class="st"><div class="stv">30</div><div class="stl">Minutes</div></div>
-      <div class="st"><div class="stv">95%</div><div class="stl">Full Pass</div></div>
-    </div>
-    <div class="pass-note">Full Pass: 95%+ · Provisional: 90–94% (staff review) · Fail: below 90%</div>
-    <button class="cta">Begin Exam →</button>
+<div class="section" id="wsc">
+  <div class="section-header">
+    <div class="section-badge" style="color:var(--wsc-blue);border-color:rgba(64,128,192,0.3);background:rgba(64,128,192,0.06)">WSC</div>
+    <div class="section-title" style="color:#80B8E8">World Series Championship</div>
+    <div class="section-line" style="background: linear-gradient(90deg, rgba(64,128,192,0.4), transparent)"></div>
   </div>
 
-  <div class="card" data-league="WSC" onclick="location.href='wsc_f2_driver_exam.html'">
-    <div class="badge badge-wsc">● WSC</div>
-    <div class="card-title">WSC F2 Driver Rules & Standards</div>
-    <div class="card-sub">World Series Championship — F2 Division</div>
-    <div class="stats">
-      <div class="st"><div class="stv">50</div><div class="stl">Questions</div></div>
-      <div class="st"><div class="stv">30</div><div class="stl">Minutes</div></div>
-      <div class="st"><div class="stv">95%</div><div class="stl">Full Pass</div></div>
-    </div>
-    <div class="pass-note">Full Pass: 95%+ · Provisional: 90–94% (staff review) · Fail: below 90%</div>
-    <button class="cta">Begin Exam →</button>
-  </div>
+  <div class="exam-grid cols3">
 
-  <div class="card" data-league="WSC" onclick="location.href='wsc_driver_exam.html'">
-    <div class="badge badge-wsc">● WSC</div>
-    <div class="card-title">WSC Driver Rules & Standards</div>
-    <div class="card-sub">World Series Championship — General</div>
-    <div class="stats">
-      <div class="st"><div class="stv">50</div><div class="stl">Questions</div></div>
-      <div class="st"><div class="stv">30</div><div class="stl">Minutes</div></div>
-      <div class="st"><div class="stv">95%</div><div class="stl">Full Pass</div></div>
-    </div>
-    <div class="pass-note">Full Pass: 95%+ · Provisional: 90–94% (staff review) · Fail: below 90%</div>
-    <button class="cta">Begin Exam →</button>
+```
+<!-- WSC Steward -->
+<div class="exam-card" style="--card-accent: #4080C0" onclick="window.location.href='wsc_stewards_exam.html'">
+  <div class="exam-card-league" style="color:#4080C0">WSC — STEWARDS</div>
+  <div class="exam-card-title">WSC Stewards Certification</div>
+  <div class="exam-card-desc">Full WSC Steward certification: Axle Rule, Calculated Divebomb, PP Calculator, zone modifiers, 40-second rule, netcode mitigation, filing deadlines. Includes 10-min Practical Scenario. Score 95%+ earns optional TRL Steward invitation.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#4080C0">60</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#4080C0">35</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#4080C0">+10</div><div class="exam-meta-label">Practical</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#4080C0">90%</div><div class="exam-meta-label">Pass</div></div>
   </div>
-
-  <div class="card" data-league="WSC" onclick="location.href='wsc_stewards_exam.html'">
-    <div class="badge badge-wsc">● WSC</div>
-    <div class="card-title">WSC Stewards Certification</div>
-    <div class="card-sub">World Series Championship</div>
-    <div class="stats">
-      <div class="st"><div class="stv">30</div><div class="stl">Questions</div></div>
-      <div class="st"><div class="stv">35</div><div class="stl">Minutes</div></div>
-      <div class="st"><div class="stv">90%</div><div class="stl">Min Pass</div></div>
-    </div>
-    <div class="pass-note">Junior: 90–94% · Senior: 95–97% · Chief Steward: 98%+ · 98%+ unlocks TRL Steward invite</div>
-    <button class="cta">Begin Exam →</button>
-  </div>
-
-  <div class="card" data-league="TRL" onclick="location.href='trl_stewards_exam.html'">
-    <div class="badge badge-trl">● TRL</div>
-    <div class="card-title">TRL Stewards Certification</div>
-    <div class="card-sub">Truth Racing League</div>
-    <div class="stats">
-      <div class="st"><div class="stv">30</div><div class="stl">Questions</div></div>
-      <div class="st"><div class="stv">45</div><div class="stl">Minutes</div></div>
-      <div class="st"><div class="stv">95%</div><div class="stl">Pass</div></div>
-    </div>
-    <div class="pass-note">Pass: 95%+ (29/30 correct) · 94% is an Institutional Failure · No rounding</div>
-    <button class="cta">Begin Exam →</button>
-  </div>
-
+  <a class="exam-card-cta" href="wsc_stewards_exam.html" style="background:#4080C0">BEGIN EXAM →</a>
 </div>
 
-<div class="standards">
-  <div class="sec-head">Passing Standards</div>
-  <div class="std-grid">
-    <div class="std"><div class="std-lbl g">Full Pass — 95%+</div><div class="std-desc">Certification granted immediately. No further review required. Applies to all exams at the full threshold.</div></div>
-    <div class="std"><div class="std-lbl y">Provisional — 90–94%</div><div class="std-desc">WSC Driver exams only. Conditional licence issued, subject to staff review. All other exams: this score is a fail.</div></div>
-    <div class="std"><div class="std-lbl r">Fail — Below Threshold</div><div class="std-desc">Certification denied. Full retake required. No partial credit. No exceptions. Merit cannot be rounded up.</div></div>
+<!-- WSC F1 Driver -->
+<div class="exam-card" style="--card-accent: #50A0D8" onclick="window.location.href='wsc_f1_driver_exam.html'">
+  <div class="exam-card-league" style="color:#50A0D8">WSC — F1 DIVISION</div>
+  <div class="exam-card-title">WSC F1 Driver Rules & Standards</div>
+  <div class="exam-card-desc">WSC Unified Code, Driving Standards & Racing Code, Penalty Appendix. Axle Rule, divebomb standard, defensive conduct, PP system, track limits, pit zones. F1-level questions.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#50A0D8">50</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#50A0D8">30</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#50A0D8">90%</div><div class="exam-meta-label">Pass</div></div>
+  </div>
+  <a class="exam-card-cta" href="wsc_f1_driver_exam.html" style="background:#50A0D8">BEGIN EXAM →</a>
+</div>
+
+<!-- WSC F2 Driver -->
+<div class="exam-card" style="--card-accent: #60B0E0" onclick="window.location.href='wsc_f2_driver_exam.html'">
+  <div class="exam-card-league" style="color:#60B0E0">WSC — F2 DIVISION</div>
+  <div class="exam-card-title">WSC F2 Driver Rules & Standards</div>
+  <div class="exam-card-desc">WSC development division standards. Sporting code essentials, PP system, attendance obligations, incident reporting format. Provisional pass (90-94%) available pending staff review.</div>
+  <div class="exam-card-meta">
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#60B0E0">50</div><div class="exam-meta-label">Questions</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#60B0E0">30</div><div class="exam-meta-label">Minutes</div></div>
+    <div class="exam-meta-item"><div class="exam-meta-val" style="color:#60B0E0">90%</div><div class="exam-meta-label">Pass</div></div>
+  </div>
+  <a class="exam-card-cta" href="wsc_f2_driver_exam.html" style="background:#60B0E0">BEGIN EXAM →</a>
+</div>
+```
+
   </div>
 </div>
 
-<div class="sec-head" style="max-width:1080px;margin:0 auto;padding:0 40px 16px">How It Works</div>
-<div class="how">
-  <div class="hw"><div class="hw-n">01</div><div class="hw-t">AI Generated</div><div class="hw-d">Every exam generates a completely fresh set of questions from the official rulebook on each attempt. No two exams are identical.</div></div>
-  <div class="hw"><div class="hw-n">02</div><div class="hw-t">Timed & Strict</div><div class="hw-d">Server-enforced countdown timer. Exam auto-submits at expiry. Answers given so far are scored. No pausing.</div></div>
-  <div class="hw"><div class="hw-n">03</div><div class="hw-t">Three Difficulty Tiers</div><div class="hw-d">Questions calibrated across straightforward rule recall, applied scenario, and hard edge cases.</div></div>
-  <div class="hw"><div class="hw-n">04</div><div class="hw-t">Full Review</div><div class="hw-d">After submission, full explanations are revealed for every question. Retake with a completely fresh exam immediately.</div></div>
+<!-- ─── PASSING STANDARDS ─── -->
+
+<div class="section" id="passing">
+  <div class="section-header">
+    <div class="section-badge">Standards</div>
+    <div class="section-title">Passing Standards</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="pass-info-grid">
+    <div class="pass-card full">
+      <div class="pass-label">Full Pass</div>
+      <div class="pass-threshold">95%+</div>
+      <div class="pass-desc">Certification granted immediately. Licence or role token issued server-side. No further review required. <em>TRL standard for all exams.</em></div>
+    </div>
+    <div class="pass-card prov">
+      <div class="pass-label">Provisional Pass</div>
+      <div class="pass-threshold">90–94%</div>
+      <div class="pass-desc">WSC Driver exams only. Conditional licence issued — subject to WSC Staff review. Not applicable to TRL exams. 94% is still an Institutional Failure in TRL.</div>
+    </div>
+    <div class="pass-card fail">
+      <div class="pass-label">Fail</div>
+      <div class="pass-threshold">&lt; Threshold</div>
+      <div class="pass-desc">24-hour server-side lockout applied. No partial credit. Full retake required after lockout expires. Merit cannot be rounded up. No exceptions.</div>
+    </div>
+  </div>
+
+  <div class="special-notes">
+    <div class="special-notes-title">Special Conditions</div>
+    <div class="note-item"><strong>WSC → TRL Pathway:</strong> WSC Stewards who score 95%+ on the Stewards exam earn an optional invitation to sit the TRL Stewards Certification exam. This is never mandatory.</div>
+    <div class="note-item"><strong>WSC Results Notification:</strong> All passing WSC Steward results are automatically reported to the WSC Admin (xjanx07x). Scores of 95%+ trigger a separate TRL Steward invitation notification.</div>
+    <div class="note-item"><strong>TRL Era Endorsements:</strong> F1 and F2 Driver exams require selecting both a tier AND an era endorsement ([E-GE]/[E-AP]/[E-NC]). Both components are tested in the same exam session.</div>
+    <div class="note-item"><strong>Proxy Certification:</strong> Utilising any proxy to sit a PitBoss exam is a Lifetime Ban offense under TRL Articles of Expulsion v3.0, Article 2.06. The proxy sitter also receives a Lifetime Ban.</div>
+    <div class="note-item"><strong>Anti-Bypass:</strong> All timers are server-side. Clearing cache, closing the tab, or refreshing does not reset the lockout timer or extend exam time.</div>
+  </div>
 </div>
 
-<footer>
-  <div class="ft-l">WSC & TRL Commissioner's Office · PitBoss Certification System</div>
-  <div class="ft-r">"Your seat is earned, not given."</div>
-</footer>
+<!-- ─── HOW IT WORKS ─── -->
 
+<div class="section">
+  <div class="section-header">
+    <div class="section-badge">System</div>
+    <div class="section-title">How It Works</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-number">01</div>
+      <div>
+        <div class="how-title">Select Your Role & Configuration</div>
+        <div class="how-desc">Choose your league (TRL or WSC), your specific role or tier, and any required sub-selections such as era endorsement for F1/F2 Driver exams.</div>
+      </div>
+    </div>
+    <div class="how-card">
+      <div class="how-number">02</div>
+      <div>
+        <div class="how-title">AI Generates Fresh Questions</div>
+        <div class="how-desc">Claude AI generates a completely new question set from official rulebook content on every attempt. No two exams are identical. Questions span standard, moderate, and hard difficulty levels.</div>
+      </div>
+    </div>
+    <div class="how-card">
+      <div class="how-number">03</div>
+      <div>
+        <div class="how-title">Server-Side Timed Examination</div>
+        <div class="how-desc">The exam timer is enforced server-side. It cannot be paused, bypassed, or reset. The exam auto-submits with answers given so far when time expires.</div>
+      </div>
+    </div>
+    <div class="how-card">
+      <div class="how-number">04</div>
+      <div>
+        <div class="how-title">Instant Results & Full Review</div>
+        <div class="how-desc">Score calculated immediately. Pass = certification token issued. Fail = 24-hour lockout. Full question-by-question explanations with rule citations revealed after submission.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<script>
-function filter(league, btn) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  btn.classList.add('on');
-  document.querySelectorAll('.card').forEach(c => {
-    c.classList.toggle('hidden', league !== 'ALL' && c.dataset.league !== league);
-  });
-}
-</script>
+<!-- ─── KNOWLEDGE BASE ─── -->
+
+<div class="section" id="kb">
+  <div class="section-header">
+    <div class="section-badge">Knowledge Base</div>
+    <div class="section-title">FIA ISC & Regulations Library</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div style="background: var(--panel); border: 1px solid var(--border-gold); padding: 20px 24px; margin-bottom: 20px;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">FIA Document Integration Status</div>
+    <div style="font-size:13px;color:var(--text-dim);line-height:1.7">
+      PitBoss exam questions draw directly from the global FIA regulatory library. The AI question generator has deep knowledge of FIA ISC 2019–2026, all Appendices (A through S), F1/F2/F3 Sporting Regulations, and FIA Appendix E (Esports International Sporting Code, effective January 2025). <strong style="color:var(--text)">TRL's governance framework predates and mirrors what the FIA has now formally codified in Appendix E.</strong> PitBoss isn't behind the curve — it's ahead of it.
+    </div>
+  </div>
+
+  <div class="kb-grid">
+    <div class="kb-item">
+      <div class="kb-dot"></div>
+      <div>
+        <div class="kb-title">FIA International Sporting Code (ISC) 2019–2026</div>
+        <div class="kb-desc">All 20 core articles. Competitor responsibilities, protests & appeals, sanctions framework, judicial procedures. Foundation of TRL governance.</div>
+      </div>
+    </div>
+    <div class="kb-item">
+      <div class="kb-dot" style="background:#80B0FF"></div>
+      <div>
+        <div class="kb-title">Appendix E — Esports ISC (Dec 2024)</div>
+        <div class="kb-desc">First esports-specific FIA regulatory framework. International Esports Licence, ASN authority, virtual motorsport definitions. TRL exam system aligned with this standard.</div>
+      </div>
+    </div>
+    <div class="kb-item">
+      <div class="kb-dot"></div>
+      <div>
+        <div class="kb-title">Appendix L — Driver Conduct 2019–2026</div>
+        <div class="kb-desc">International driver licences, medical examinations, driver equipment and conduct standards. Now includes International Esports Licence provisions.</div>
+      </div>
+    </div>
+    <div class="kb-item">
+      <div class="kb-dot" style="background:#80B0FF"></div>
+      <div>
+        <div class="kb-title">F1 Sporting Regulations 2022–2026</div>
+        <div class="kb-desc">Version delta analysis across game eras: 2022→F1 23, 2023→F1 24, 2024/25→F1 25, 2026→F1 26 DLC. Feeds era endorsement question banks.</div>
+      </div>
+    </div>
+    <div class="kb-item">
+      <div class="kb-dot"></div>
+      <div>
+        <div class="kb-title">FIA F2 Sporting Regulations 2025–2026</div>
+        <div class="kb-desc">Sprint Race & Feature Race structure, driver conduct standards, steward procedures. Foundation for F2 Academy exam questions.</div>
+      </div>
+    </div>
+    <div class="kb-item">
+      <div class="kb-dot" style="background:#80B0FF"></div>
+      <div>
+        <div class="kb-title">FIA Judicial & Disciplinary Rules 2025</div>
+        <div class="kb-desc">FIA's own disciplinary process — directly relevant to TRL's BSAC and judicial framework. Right of Review vs Right of Appeal distinction.</div>
+      </div>
+    </div>
+    <div class="kb-item">
+      <div class="kb-dot"></div>
+      <div>
+        <div class="kb-title">TRL Charter v10.0 + Full Document Suite</div>
+        <div class="kb-desc">USS v4.0, USC v4.0, BSAC Charter v4.0, Stewards Charter v3.0, Articles of Expulsion v3.0, IRM v2.0, AAP v3.0, DDV Regulations v1.1, P&R Regulations v2.0, DPA v3.0.</div>
+      </div>
+    </div>
+    <div class="kb-item">
+      <div class="kb-dot" style="background:#4080C0"></div>
+      <div>
+        <div class="kb-title">WSC Unified Code v1.2 + Full Suite</div>
+        <div class="kb-desc">WSC Unified Rulebook v1.2, Stewards Manual v1.2, Driving Standards & Racing Code v1.2, Penalty Appendix v1.2, Attendance & Commitment Policy v1.0.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+  <div class="footer-brand">PitBoss</div>
+  <div class="footer-motto">"Truth in Meritocracy: Your Seat is Earned, Not Given."</div>
+  <div class="footer-legal">
+    Administered by the TRL Commissioner's Office & WSC Administration.<br>
+    Commissioner: TheTruthExperien · WSC Admin Notification: xjanx07x<br>
+    Questions generated fresh on every attempt. The system never serves the same exam twice.<br>
+    All exams require an active internet connection. Best experienced on desktop or tablet.
+  </div>
+</div>
 
 </body>
 </html>
