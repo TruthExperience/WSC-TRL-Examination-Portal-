@@ -1,4 +1,4 @@
-# WSC & TRL Examination Portal
+PitBoss
 
 Official certification examinations for the World Series Championship (WSC) and Truth Racing League (TRL). All exams are AI-powered — questions are generated fresh on every attempt from the official rulebooks.
 
